@@ -1,0 +1,1 @@
+We mapped the Event ISA hierarchy using a table-per-subclass approach, where the Event table stores common attributes like Date_ and each specialized event type has its own table with a foreign key referencing Event, allowing easy linking of child tables to the parent, consistent management of dates and times, and a clean, normalized, and extensible schema.
