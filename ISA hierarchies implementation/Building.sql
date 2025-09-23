@@ -1,6 +1,12 @@
+CREATE TABLE Building(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    address_ VARCHAR(100) NOT NULL,
+)
+
 CREATE TABLE SSC(
     club VARCHAR(50),
     club_schedule VARCHAR(50)
+    FOREIGN KEY (id) REFERENCES Building(id)
 );
 
 CREATE TABLE IRC(
@@ -9,7 +15,8 @@ CREATE TABLE IRC(
     study_areas VARCHAR(50),
     study_area_capacity INT,
     other_rooms VARCHAR(50),
-    other_rooms_capacity INT
+    other_rooms_capacity INT,
+    FOREIGN KEY (id) REFERENCES Building(id)
 );
 
 CREATE TABLE Gym(
@@ -17,6 +24,7 @@ CREATE TABLE Gym(
     equipment VARCHAR(50),
     personnel VARCHAR(50),
     working_hours TIME,
+    FOREIGN KEY (id) REFERENCES Building(id)
 );
 
 CREATE TABLE Dorm(
@@ -24,17 +32,20 @@ CREATE TABLE Dorm(
     other_rooms VARCHAR(50),
     servery_schedule TIME,
     servery_menu VARCHAR(50),
+    FOREIGN KEY (id) REFERENCES Building(id)
 );
 
 CREATE TABLE Research_hall(
     department VARCHAR(50),
     rooms VARCHAR(50),
-    schedule VARCHAR(50)
+    schedule VARCHAR(50),
+    FOREIGN KEY (id) REFERENCES Building(id)
 );
 
 CREATE TABLE RLH(
     services VARCHAR(50),
     services_schedule TIME,
     services_office_number INT,
-    other_room VARCHAR(50)
+    other_room VARCHAR(50),
+    FOREIGN KEY (id) REFERENCES Building(id)
 );
