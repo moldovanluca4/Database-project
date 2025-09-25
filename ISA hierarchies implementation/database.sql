@@ -1,18 +1,18 @@
-CREATE TABLE VENUE (
+CREATE TABLE Venue (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
-    opening_hours VARCHAR(100),
+    opening_hours VARCHAR(100)
 );
 CREATE TABLE LECTURE_HALL (
     venue_id INT PRIMARY KEY,
-    name_ VARCHAR(100),
-    address_ VARCHAR(100),
+    name VARCHAR(100),
+    address VARCHAR(100),
     FOREIGN KEY (venue_id) REFERENCES Venue(id)
 );
 CREATE TABLE Lab (
     venue_id INT PRIMARY KEY,
     facilities VARCHAR(100),
-    Access_ VARCHAR(100),
+    Access VARCHAR(100),
     major VARCHAR(100),
     FOREIGN KEY (venue_id) REFERENCES Venue(id)
 );
@@ -35,6 +35,7 @@ CREATE TABLE MeetingRoom (
     registration_required BOOLEAN,
     equipment VARCHAR(255),
     hybrid_capable BOOLEAN,
+     FOREIGN KEY (venue_id) REFERENCES Venue(id)
 );
 CREATE TABLE Cinema (
     venue_id INT PRIMARY KEY,
