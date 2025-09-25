@@ -5,14 +5,14 @@ CREATE TABLE Venue (
 );
 CREATE TABLE LECTURE_HALL (
     venue_id INT PRIMARY KEY,
-    name VARCHAR(100),
-    address VARCHAR(100),
+    name_ VARCHAR(100),
+    address_ VARCHAR(100),
+    capacity INT,
     FOREIGN KEY (venue_id) REFERENCES Venue(id)
 );
 CREATE TABLE Lab (
     venue_id INT PRIMARY KEY,
-    facilities VARCHAR(100),
-    Access VARCHAR(100),
+    equipment VARCHAR(100),
     major VARCHAR(100),
     FOREIGN KEY (venue_id) REFERENCES Venue(id)
 );
@@ -24,9 +24,9 @@ CREATE TABLE Lab (
 );
 CREATE TABLE Theater (
     venue_id INT PRIMARY KEY,
-     capacity INT,
-    ticketed_events BOOLEAN, 
-    event_theme VARCHAR(255), 
+    capacity INT,
+    Ticket_price INT, 
+    play VARCHAR(255), 
     FOREIGN KEY (venue_id) REFERENCES Venue(id)
 );
 CREATE TABLE MeetingRoom (
@@ -35,12 +35,13 @@ CREATE TABLE MeetingRoom (
     registration_required BOOLEAN,
     equipment VARCHAR(255),
     hybrid_capable BOOLEAN,
-     FOREIGN KEY (venue_id) REFERENCES Venue(id)
+    FOREIGN KEY (venue_id) REFERENCES Venue(id)
 );
 CREATE TABLE Cinema (
     venue_id INT PRIMARY KEY,
     booking_price DECIMAL(8, 2) NOT NULL, 
-    available_themes VARCHAR(255),       
+    snacks VARCHAR(50),
+    snack_prices INT,      
     available_time_slots VARCHAR(255),   
     FOREIGN KEY (venue_id) REFERENCES Venue(id)
 );
