@@ -5,11 +5,18 @@ SELECT
     ev.Date_ AS Same_Date
 FROM Exam e
 JOIN Event ev ON e.Event_ID = ev.Event_ID
-JOIN Tournament t ON t.Event_ID = ev.Event_ID
-JOIN FoodShow f ON f.Event_ID = ev.Event_ID;
+LEFT JOIN Tournament t ON t.Event_ID = ev.Event_ID
+LEFT JOIN FoodShow f ON f.Event_ID = ev.Event_ID;
 
-# Exam_Name	Tournament_Match	Country_Food_Show	Same_Date
-Operating System	Vollyeball	France	2025-11-09 09:00:00
+# Exam_Name	    Tournament_Match	Country_Food_Show	Same_Date
+Operating System	Vollyeball	        France	        2025-11-09 09:00:00
+Chemistry			                                    2025-11-09 14:00:00
+Biology	            Basketball		                    2025-11-10 10:00:00
+Math	            Football		                    2025-11-11 12:00:00
+Database		                        China       	2025-11-12 18:00:00
+Probability		                        Italy	        2025-11-13 15:00:00
+Logic			                                        2025-11-09 14:00:00
+
 
 
 SELECT 
