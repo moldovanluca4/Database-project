@@ -1,8 +1,8 @@
-CREATE DATABASE FOLDER;
-Use FOLDER;
 CREATE TABLE Event(
 	Event_ID Int primary key,
-    Date_ Datetime
+	Venue_ID Int Not Null,
+    Date_ Datetime,
+	FOREIGN KEY (Venue_id) REFERENCES Venue(id)
     );
     
 CREATE TABLE Exam(

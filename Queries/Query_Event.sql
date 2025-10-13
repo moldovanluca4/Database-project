@@ -5,8 +5,8 @@ SELECT
     ev.Date_ AS Same_Date
 FROM Exam e
 JOIN Event ev ON e.Event_ID = ev.Event_ID
-JOIN Tournament t ON t.Event_ID = ev.Event_ID
-JOIN FoodShow f ON f.Event_ID = ev.Event_ID;
+LEFT JOIN Tournament t ON t.Event_ID = ev.Event_ID
+LEFT JOIN FoodShow f ON f.Event_ID = ev.Event_ID;
 
 SELECT 
     Exam_Name,
