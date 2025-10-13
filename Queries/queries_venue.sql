@@ -3,7 +3,7 @@ SELECT v.name AS venue_name,
        lh.name_ AS hall_name,
        lh.address_,
        lh.capacity
-FROM Lecture_Hall lh
+FROM LECTURE_HALL lh
 JOIN Venue v ON lh.venue_id = v.id
 WHERE lh.capacity > 100;
 
@@ -18,8 +18,8 @@ HAVING COUNT(m.venue_id) > 0;
 
 --find how many venues exist for each facility type on campus
 SELECT 
-    'Lecture Hall' AS venue_type, COUNT(lh.venue_id) AS total
-FROM Lecture_Hall lh
+    'Lecture HAll' AS venue_type, COUNT(lh.venue_id) AS total
+FROM LECTURE_HALL lh
 UNION ALL
 SELECT 
     'Lab', COUNT(l.venue_id)
@@ -27,7 +27,7 @@ FROM Lab l
 UNION ALL
 SELECT 
     'Coffee Bar', COUNT(cb.venue_id)
-FROM Coffee_Bar cb
+FROM Coffee_bar cb
 UNION ALL
 SELECT 
     'Theater', COUNT(t.venue_id)

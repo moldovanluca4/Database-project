@@ -13,10 +13,11 @@ CREATE TABLE LECTURE_HALL (
 CREATE TABLE Lab (
     venue_id INT PRIMARY KEY,
     equipment VARCHAR(100),
+    access_ VARCHAR(100),
     major VARCHAR(100),
     FOREIGN KEY (venue_id) REFERENCES Venue(id)
 );
- CREATE TABLE COFFEE_BAR (
+ CREATE TABLE Coffee_bar (
     venue_id INT PRIMARY KEY,
     prices DECIMAL(10, 2),
     products VARCHAR(100),
