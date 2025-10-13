@@ -16,12 +16,12 @@ CREATE TABLE SCC (
 
 CREATE TABLE IRC (
     building_id INT,
-    books VARCHAR(50),
+    books VARCHAR(300),
     book_availability BOOLEAN,
     book_type VARCHAR(10),
-    study_areas VARCHAR(50),
+    study_areas VARCHAR(80),
     study_area_capacity INT,
-    other_rooms VARCHAR(50),
+    other_rooms VARCHAR(80),
     other_rooms_capacity INT,
     FOREIGN KEY (building_id) REFERENCES Building(id)
 );
@@ -29,7 +29,7 @@ CREATE TABLE IRC (
 CREATE TABLE Gym (
     building_id INT,
     membership_price INT,
-    equipment VARCHAR(50),
+    equipment VARCHAR(300),
     personnel VARCHAR(50),
     working_days VARCHAR(50),
     start_time TIME,
@@ -41,11 +41,11 @@ CREATE TABLE Dorm (
     building_id INT,
     room_type VARCHAR(10),
     other_rooms VARCHAR(50),
-    meal_type VARCHAR(15),
+    meal_type VARCHAR(30),
     servery_schedule_days VARCHAR(100),
     start_time TIME,
     end_time TIME,
-    servery_menu VARCHAR(50),
+    servery_menu VARCHAR(300),
     FOREIGN KEY (building_id) REFERENCES Building(id)
 );
 
@@ -61,7 +61,7 @@ CREATE TABLE Research_hall (
 
 CREATE TABLE RLH (
     building_id INT,
-    services VARCHAR(50),
+    services VARCHAR(100),
     services_schedule_days VARCHAR(50),
     start_time TIME,
     end_time TIME,
