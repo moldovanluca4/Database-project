@@ -5,7 +5,18 @@ VALUES
 (3, 'Campus Ring 7'),
 (4, 'College Ring 6'),
 (5, 'Campus RIng 6'),
-(6, 'campus Ring 1');
+(6, 'campus Ring 1'),
+(7, 'West Hall 1'),
+(8, 'East Hall 2'),
+(9, 'South Hall 3'),
+(10, 'Student Activity Center 4'),
+(11, 'College Nordmetal 4'),
+(12, 'College 3 2'),
+(13, 'College Mercator 1'),
+(14, 'College Krupp 5'),
+(15, 'Eon lab 2'),
+(16, 'Gym 1'),
+(17, 'Porters 3');
 
 
 INSERT INTO SCC(building_id, club, club_schedule_days, start_time, end_time) 
