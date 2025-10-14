@@ -1,14 +1,14 @@
 -- Insert Venues 
-INSERT INTO Venue(name, opening_hours) VALUES
-('Main Lecture Hall', '08:00-18:00'),        
-('Chemestry Lab', '09:00-17:00'),          
-('Campus Coffee Bar', '07:00-20:00'),     
-('Campus Theater', '10:00-22:00'),          
-('Conference Room A', '08:00-18:00'),        
-('C3 Cinema', '10:00-23:00'),                 
-('College 1 Lecture Hall', '08:00-18:00'),    
-('College 3 Lecture Hall', '08:00-18:00'),   
-('Conrad Neiber Lecture Hall', '08:00-18:00');
+INSERT INTO Venue(name, start_time, finish_time) VALUES
+('Main Lecture Hall', '08:00:00', '18:00:00'),        
+('Chemestry Lab', '09:00:00', '17:00:00'),          
+('Campus Coffee Bar', '07:00:00', '20:00:00'),     
+('Campus Theater', '10:00:00', '22:00:00'),          
+('Conference Room A', '08:00:00', '18:00:00'),        
+('C3 Cinema', '10:00:00', '23:00:00'),                 
+('College 1 Lecture Hall', '08:00:00', '18:00:00'),    
+('College 3 Lecture Hall', '08:00:00', '18:00:00'),   
+('Conrad Neiber Lecture Hall', '08:00:00', '18:00:00');
 
 INSERT INTO LECTURE_HALL(venue_id, name_, address_, capacity) VALUES
 (1, 'IRC Lecture Hall A', 'Campus Ring 1', 400),
