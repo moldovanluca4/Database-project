@@ -1,5 +1,3 @@
-Create Database Project; --create database project is not needed the database is created on mariadb USE db_username
-Use Project;
 
     CREATE TABLE Building (
     id INT PRIMARY KEY AUTO_INCREMENT,
