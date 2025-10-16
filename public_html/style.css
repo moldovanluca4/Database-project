@@ -1,0 +1,170 @@
+
+body {
+    margin: 1;
+    padding: 12;
+    background: #478341;
+    font-size: 16px;
+    color: #0b0f13; 
+}
+
+h1, h2, h3 {
+    margin: 0.5;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif; /* Headings Font from CD */
+    font-weight: 800;
+}
+
+p {
+    line-height: 1.8em;
+}
+
+a {
+    color: #3498DB; /* Link Blue from CD */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.container {
+    width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+/* --- Header Styling --- */
+#wrapper1 {
+    background: #8E44AD; /* Primary Purple from CD */
+}
+
+#header-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#logo img {
+    width: 120px; /* Adjust size as needed */
+    height: auto;
+    margin-right: 20px;
+    vertical-align: middle;
+}
+
+#logo h1 {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 2.5em;
+}
+
+#logo h1 a {
+    color: #3b0000;
+    text-decoration: none;
+}
+
+#logo span {
+    display: block;
+    color: #ECF0F1;
+    font-size: 0.9em;
+    margin-top: -10px;
+    margin-left: 145px; /* Aligns with text */
+}
+
+/* --- Menu Styling --- */
+#menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#menu li {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+#menu a {
+    display: block;
+    padding: 10px 15px;
+    color: #FFFFFF;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1em;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+#menu a:hover {
+    background-color: #532f61; /* Lighter purple on hover */
+    text-decoration: none;
+}
+
+#menu .current_page_item a {
+    background: #1ABC9C; /* Primary Green from CD for active page */
+    color: #FFFFFF;
+}
+
+
+/* --- Content Sections --- */
+#wrapper2 {
+    background: #7098a1; /* Background Light Grey from CD */
+    padding: 50px 0;
+    text-align: center;
+}
+
+
+.title h2 {
+    font-size: 3.5em;
+    color: #34495E;
+}
+
+.title .byline {
+    font-size: 3.2em;
+    color: #7f8c8d;
+    margin-bottom: 30px;
+    display: block;
+}
+
+#portfolio {
+    overflow: hidden; /* Clear floats */
+    text-align: center;
+}
+
+#portfolio .box {
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #bdc3c7;
+    border-radius: 5px;
+    min-height: 150px;
+}
+
+#portfolio h3 {
+    margin-bottom: 10px;
+    color: #8E44AD; /* Primary Purple */
+}
+
+/* 4-column layout for highlights */
+#portfolio [class^="column"] {
+    float: left;
+    width: 22.5%;
+    margin-right: 3.33%;
+}
+
+#portfolio .column4 {
+    margin-right: 0;
+}
+
+/* --- Imprint Page Specific --- */
+#imprint-content {
+    padding: 40px 0;
+}
+
+#imprint-content h3 {
+    margin-top: 20px;
+    color: #8E44AD;
+}
+
+#imprint-content hr {
+    border: 0;
+    height: 1px;
+    background: #bdc3c7;
+    margin: 40px 0;
+}
