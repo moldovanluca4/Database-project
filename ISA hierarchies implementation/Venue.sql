@@ -1,7 +1,8 @@
 CREATE TABLE Venue (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
-    opening_hours VARCHAR(100)
+    start_time TIME,
+    finish_time TIME
 );
 CREATE TABLE LECTURE_HALL (
     venue_id INT PRIMARY KEY,
