@@ -138,6 +138,7 @@ CREATE TABLE Research_hallSchedule(
     FOREIGN KEY (research_hall_building_id) REFERENCES Research_hall(building_id)
 );
 
+
 CREATE TABLE Majors(
     id INT PRIMARY KEY AUTO_INCREMENT,
     major_name VARCHAR(100) NOT NULL UNIQUE
