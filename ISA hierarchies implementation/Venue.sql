@@ -3,6 +3,8 @@ CREATE TABLE Venue (
     name VARCHAR(100) NOT NULL,
     start_time TIME,
     finish_time TIME
+    building_id INT,
+    FOREIGN KEY (building_id) REFERENCES Building(id)
 );
 CREATE TABLE LECTURE_HALL (
     venue_id INT PRIMARY KEY,

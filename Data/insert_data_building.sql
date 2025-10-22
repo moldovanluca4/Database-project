@@ -155,7 +155,7 @@ VALUES
 (4, 'Lunch', 'Vegetable Soup, Mashed potatoes with beef, sides of vegetables', 'Monday-Sunday', '12:00:00', '14:00:00'),
 (4, 'Dinner', 'French fries with chicken breast, Lamb meat with rice, sides of vegetables, cheesecake', 'Monday-Sunday', '16:00:00', '18:00:00'),
 (5, NULL, 'Pizza hawaii, Pizza margherita, Pasta carbonara, Pizza quatro formaggi, pasta bolognese', 'Monday, Wednesday, Friday', '14:00:00', '22:00:00'),
-(6, NULL,'Beef burger with fries', 'Tuesday, Thursday, Saturday', '14:00:00', '22:00:00');
+(6, NULL,'Beef burger with fries', 'Tuesday, Thursday, Saturday', '14:00:00', '22:00:00'),
 (7, 'Breakfast', 'Pancakes, Joghurt, Hashbrowns, Croissants', 'Monday-Sunday', '08:00:00', '10:00:00'),
 (7, 'Lunch', 'Chicken noodle soup, Spaghetti with tomato sauce, sides of vegetables', 'Monday-Sunday', '12:00:00', '14:00:00'),
 (7, 'Dinner', 'Roasted potatoes with pork, Grilled fish with rice, sides of vegetables, fruit salad', 'Monday-Sunday', '16:00:00', '18:00:00');
