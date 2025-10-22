@@ -1,2 +1,3 @@
-# Database-project Fall 2025
+# Database course
+Database project - Fall 2025
 
