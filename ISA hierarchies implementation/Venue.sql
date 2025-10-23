@@ -2,7 +2,7 @@ CREATE TABLE Venue (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
     start_time TIME,
-    finish_time TIME
+    finish_time TIME.
     building_id INT,
     FOREIGN KEY (building_id) REFERENCES Building(id)
 );
