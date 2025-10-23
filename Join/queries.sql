@@ -94,7 +94,7 @@ FROM (
     UNION ALL
     SELECT COUNT(*) FROM CareerDay
     UNION ALL
-    SELECT COUNT(*) FROM Cermony
+    SELECT COUNT(*) FROM Ceremony
     UNION ALL
     SELECT COUNT(*) FROM FoodShow
 ) AS total_counts;

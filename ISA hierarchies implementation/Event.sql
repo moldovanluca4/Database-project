@@ -1,6 +1,6 @@
 CREATE TABLE Event(
 	Event_ID Int primary key,
-	Venue_ID Int Not Null,
+	Venue_ID Int,
     Date_ Datetime,
 	FOREIGN KEY (Venue_id) REFERENCES Venue(id)
     );
@@ -40,8 +40,8 @@ CREATE TABLE CareerDay(
     FOREIGN KEY(Event_ID) REFERENCES Event(Event_ID)
     );
     
-CREATE TABLE Cermony(
-	Cermony_ID Int primary key,
+CREATE TABLE Ceremony(
+	Ceremony_ID Int primary key,
     Event_ID Int,
 	Name_ varchar(100),
     Date_ Datetime,

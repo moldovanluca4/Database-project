@@ -154,14 +154,12 @@ INSERT INTO Event(Event_ID, Venue_ID, Date_) VALUES
 (8, 2, '2025-11-14 00:00:00');
 
 
-INSERT INTO Exam(Exam_ID, Event_ID, Exam_Name) VALUES
-(1, 1, 'Operating System'),
-(2, 2, 'Chemistry'),
-(3, 3, 'Biology'),
-(4, 4, 'Math'),
-(5, 5, 'Database'),
-(6, 6, 'Probability'),
-(7, 2, 'Logic'); 
+INSERT INTO Exam(Exam_ID, Event_ID, Exam_Name, Major, Duration) VALUES
+(1, 1, 'Operating System', 'Computer Science', '02:00:00'),
+(2, 2, 'Probability', 'Mathematics', '01:30:00'),
+(3, 3, 'Functional programming', 'Software Engineering', '02:00:00'),
+(4, 4, 'Ethical aspect of cybersecurity', 'Cybersecurity', '01:45:00'),
+(5, 5, 'Database', 'Information Systems', '02:30:00');
 
 
 INSERT INTO TOS(Tos_ID, Event_ID, Ticket_price, Theme) VALUES
@@ -181,7 +179,7 @@ INSERT INTO CareerDay(CareerDay_ID, Event_ID, Company, Remote_) VALUES
 (2, 1, 'Microsoft', FALSE);
 
 
-INSERT INTO Cermony(Cermony_ID, Event_ID, Name_) VALUES
+INSERT INTO Ceremony(Ceremony_ID, Event_ID, Name_) VALUES
 (1, 7, 'Welcome Ceremony'),
 (2, 5, 'Award Ceremony');
 
