@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Search Lecture Halls - Campus Information Center</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
     <style>
       .dropdown {
@@ -34,7 +34,7 @@
 <body>
     <header class="container header-flex-wrapper">
         <div id="logo">
-            <img src="/static/campus_logo.png" alt="Campus Information Center">
+            <img src="{{ url_for('static', filename='campus_logo.png') }}" alt="Campus Information Center">
             <h1><a href="/">Campus Information Center</a></h1>
         </div>
 
@@ -43,10 +43,11 @@
                 <li><a href="/">Home</a></li>
                 <li class="dropdown current_page_item"> <a href="javascript:void(0)" class="dropbtn">Menu</a>
                   <div id="myDropdown" class="dropdown-content">
+                    
                     <a href="/search-building">Search for a Building</a>
                     <a href="/search-event">Search for an Event</a>
-                    
-                    <a href="search-lecture-hall.html">Search Lecture Halls</a>
+                    <a href="/search-venue">Search for a Venue</a>
+                    <a href="/search-lecture-hall">Search Lecture Halls</a>
                     
                   </div>
                 </li>
@@ -58,13 +59,12 @@
 
     <main class="container">
         <div class="main-content">
+           
             
             <h3>Search for Large Lecture Halls</h3>
-
             <form action="/lecture-hall-results" method="GET">
 
               <label>Minimum Capacity:</label>
-              
               <input type="number" name="min_capacity" placeholder="e.g., 100">
             
               <button type="submit">Search</button>
@@ -81,3 +81,4 @@
 
 </body>
 </html>
+
