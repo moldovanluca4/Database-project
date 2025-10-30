@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Search Tournaments</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <header class="container">
@@ -12,7 +12,7 @@
 
     <main class="container">
         
-        <form action="{{ url_for('tournament_results') }}" method="GET">
+        <form action="event-results" method="GET">
             
             <div>
                 <label for="sport_input">Sport Name:</label>

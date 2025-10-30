@@ -19,7 +19,8 @@ def show_feedback(message, success=True):
         <p style="color: {'green' if success else 'red'};">
             {message}
         </p>
-        <a href="{ url_for('maintenance') }">Back to Maintenance Page</a>
+        <a href="{ url_for('maintenance') }">Back to Maintenance Page</a> </b>
+        <a href="{ url_for('home')}">Back to Home Page</a>
     </body>
     </html>
     """
@@ -188,18 +189,21 @@ def show_building_search():
 
 @app.route('/search-event')
 def show_event_search():
-    return ""
+    return render_template("search_tournament.html")
 
 @app.route('/search-venue')
 def show_venue_search():
-    return render_template('')
+    return render_template('search_lecture_hall.html')
 
 @app.route('/building-results', methods=['GET'])
 def personnel_search():
-    search_term = request.args.get('personnel_name')
-    sql_query = "SELECT GP.personnel_name, ROUND(AVG(TIME_TO_SEC(TIMEDIFF(GS.end_time, GS.start_time)) / 60)) AS Avg_Working_Minutes FROM GymPersonnel GP JOIN GymSchedule GS ON GP.id = GS.personnel_id GROUP BY GP.personnel_name;"
-    results = db.execute(sql_query, (search_term,))
-    return render_template('results_building.html', results_building = results)
+    try:
+        search_term = request.args.get('personnel_name')
+        sql_query = "SELECT GP.personnel_name, ROUND(AVG(TIME_TO_SEC(TIMEDIFF(GS.end_time, GS.start_time)) / 60)) AS Avg_Working_Minutes FROM GymPersonnel GP JOIN GymSchedule GS ON GP.id = GS.personnel_id GROUP BY GP.personnel_name;"
+        results = db.execute(sql_query, (search_term,))
+        return render_template('results_building.html', results_building = results)
+    except Exception as e:
+        return show_feedback(f"Error: {e}", success=False)
 
 """
 @app.route('/event-results', methods=['GET'])
