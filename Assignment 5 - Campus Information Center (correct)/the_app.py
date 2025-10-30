@@ -1,5 +1,8 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
 
 app = Flask(__name__)
 
@@ -176,6 +179,46 @@ def handle_add_service_schedule():
         return show_feedback(f"Success! Added schedule for service {service_id}.", success=True)
     except Exception as e:
         return show_feedback(f"Error: {e}", success=False)
+
+
+
+@app.route('/search-building')
+def show_building_search():
+    return render_template('search_building.html')
+
+@app.route('/search-event')
+def show_event_search():
+    return ""
+
+@app.route('/search-venue')
+def show_venue_search():
+    return render_template('')
+
+@app.route('/building-results', methods=['GET'])
+def personnel_search():
+    search_term = request.args.get('personnel_name')
+    sql_query = "SELECT GP.personnel_name, ROUND(AVG(TIME_TO_SEC(TIMEDIFF(GS.end_time, GS.start_time)) / 60)) AS Avg_Working_Minutes FROM GymPersonnel GP JOIN GymSchedule GS ON GP.id = GS.personnel_id GROUP BY GP.personnel_name;"
+    results = db.execute(sql_query, (search_term,))
+    return render_template('results_building.html', results_building = results)
+
+"""
+@app.route('/event-results', methods=['GET'])
+def event_research():
+    search_term = request.args.get('event')
+    sql_query = "SELECT * FROM Event WHERE name LIKE %s"
+    results = db.execute(sql_query, (search_term,))
+    return render_template('results_event.html', results_event=results)
+
+
+
+@app.route('/venue-results', method=['GET'])
+def lecture_hall_search():
+    search_term = request.args.get('lecture')
+    sql_query = "SELECT v.name AS venue_name,lh.name_ AS hall_name,lh.address_,lh.capacity FROM LECTURE_HALL lh JOIN Venue v ON lh.venue_id = v.id WHERE lh.capacity > 100;"
+    results = db.execute(sql_query, (search_term,))
+    return render_template('results_venue.html', results_event = results)
+"""
+
 
 if __name__ == "__main__":
     app.run(debug=True)

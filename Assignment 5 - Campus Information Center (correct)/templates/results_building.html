@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search for a building</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+<h3>Results for building</h3>
+<ul>
+    {%for item in results_building%}
+    <li>
+        <a href="/building/{{ item.id }}">{{ item.name }}</a>
+    </li>
+    {% else %}
+    <li>No results found.</li>
+  
+  {% endfor %}
+</ul>
+
+<a href="/search-building">Back to search</a>
+</ul>
+</body>
+</html>
