@@ -2,56 +2,93 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Maintenance</title>
+    <title>Maintenance - Campus Information Center</title>
     <link rel="stylesheet" href="/static/style.css">
+
+    <style>
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+      .dropdown-content {
+        display: none; 
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+      }
+      .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+     
+      .dropdown-content a:hover {background-color: #f1f1f1}
+     
+      /* This is the rule that enables hover */
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+    </style>
 </head>
+
 <body>
-
-<header class="container header-flex-wrapper">
-    <div id="logo">
-        <img src="/static/campus_logo.png" alt="Campus Information Center">
-        <h1><a href="/">Campus Information Center</a></h1>
-    </div>
-    <nav>
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li class="current_page_item"><a href="/maintenance">Maintenance</a></li>
-            <li><a href="/imprint">Imprint</a></li>
-        </ul>
-    </nav>
-</header>
-
-<main class="container">
-    <div class="main-content">
-        <div class = "title">
-            <h2>Select the form</h2>
+    <header class="container header-flex-wrapper">
+        <div id="logo">
+            <img src="/static/campus_logo.png" alt="Campus Information Center">
+            <h1><a href="/">Campus Information Center</a></h1>
         </div>
-        <p>Please select an input form:</p>
 
-        <h3>Entity Forms</h3>
-        <ul>
-            <li><a href="/add_tournament">Add a tournament</a></li>
-            <li><a href="/add_book">Add a book</a></li>
-            <li><a href="/add_club">Add a club</a></li>
-            <li><a href="/add_gym_equipment">Add gym equipment</a></li>
-            <li><a href="/add_major">Add a major</a></li>
-            <li><a href="/add_venue">Add a venue</a></li>
-        </ul>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li class="dropdown">
+                  <a href="javascript:void(0)" class="dropbtn">Menu</a>
+                  <div id="myDropdown" class="dropdown-content">
+                    <a href="/search-building">Search for a Building</a>
+                    <a href="/search-event">Search for an Event</a>
+                    <a href="/search-venue">Search for a Venue</a>
+                  </div>
+                </li>
+                <li><a href="/imprint">Imprint</a></li>
+                <li class="current_page_item"><a href="/maintenance">Maintenance Page</a></li>
+            </ul>
+        </nav>
+    </header>
 
-        <h3>Relationships Forms</h3>
-        <ul>
-            <li><a href="/link_research_hall_to_major">Link Research Hall to Major</a></li>
-            <li><a href="/add_gym_schedule">Add schedule for the gym</a></li>
-            <li><a href="/add_service_schedule">Add service schedule</a></li>
-        </ul>
+    <main class="container">
+        <div class="main-content">
+            <div class = "title">
+                <h2>Select the form</h2>
+            </div>
+            <p>Please select an input form:</p>
 
-        <hr>
-    </div>
-</main>
+            <h3>Entity Forms</h3>
+            <ul>
+                <li><a href="/add_tournament">Add a tournament</a></li>
+                <li><a href="/add_book">Add a book</a></li>
+                <li><a href="/add_club">Add a club</a></li>
+                <li><a href="/add_gym_equipment">Add gym equipment</a></li>
+                <li><a href="/add_major">Add a major</a></li>
+                <li><a href="/add_venue">Add a venue</a></li>
+            </ul>
 
-<footer class="container">
-    <p>&copy; 2025 Campus Information Center. All rights reserved.</p>
-</footer>
+            <h3>Relationships Forms</h3>
+            <ul>
+                <li><a href="/link_research_hall_to_major">Link Research Hall to Major</a></li>
+                <li><a href="/add_gym_schedule">Add schedule for the gym</a></li>
+                <li><a href="/add_service_schedule">Add service schedule</a></li>
+            </ul>
 
-</body>
+            <hr>
+        </div>
+    </main>
+
+    <footer class="container">
+        <p>&copy; 2025 Campus Information Center. All rights reserved.</p>
+    </footer>
+
+    </body>
 </html>
