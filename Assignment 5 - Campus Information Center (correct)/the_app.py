@@ -181,6 +181,19 @@ def handle_add_service_schedule():
         return show_feedback(f"Error: {e}", success=False)
 
 
+
+@app.route('/search-building')
+def show_building_search():
+    return render_template('search_building.html')
+
+@app.route('/search-event')
+def show_event_search():
+    return ""
+
+@app.route('/search-venue')
+def show_venue_search():
+    return render_template('')
+
 @app.route('/building-results', methods=['GET'])
 def personnel_search():
     search_term = request.args.get('personnel_name')
