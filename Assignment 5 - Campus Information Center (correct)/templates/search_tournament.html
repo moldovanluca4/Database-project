@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Tournaments</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="container">
+        <h1>Find a Tournament by Sport</h1>
+    </header>
+
+    <main class="container">
+        
+        <form action="{{ url_for('tournament_results') }}" method="GET">
+            
+            <div>
+                <label for="sport_input">Sport Name:</label>
+                <input type="text" id="sport_input" name="sport_name" placeholder="e.g., Football">
+            </div>
+            <br>
+            <div>
+                <button type="submit">Search</button>
+            </div>
+        </form>
+    </main>
+
+    <footer class="container">
+        <p>&copy; 2025 Campus Information Center.</p>
+    </footer>
+</body>
+</html>
