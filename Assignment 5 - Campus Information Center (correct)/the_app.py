@@ -1,10 +1,17 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for
-#from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import text
+import config
 
-#db = SQLAlchemy()
+db = SQLAlchemy()
 
 app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{config.DB_USER}:{config.DB_PASS}@{config.DB_HOST}/{config.DB_NAME}"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db.init_app(app)
 
 def show_feedback(message, success=True):
     return f"""
@@ -199,8 +206,15 @@ def show_venue_search():
 def personnel_search():
     try:
         search_term = request.args.get('personnel_name')
-        sql_query = "SELECT GP.personnel_name, ROUND(AVG(TIME_TO_SEC(TIMEDIFF(GS.end_time, GS.start_time)) / 60)) AS Avg_Working_Minutes FROM GymPersonnel GP JOIN GymSchedule GS ON GP.id = GS.personnel_id GROUP BY GP.personnel_name;"
-        results = db.execute(sql_query, (search_term,))
+        sql_query = text("""
+                     SELECT 
+                     GP.personnel_name, 
+                     ROUND(AVG(TIME_TO_SEC(TIMEDIFF(GS.end_time, GS.start_time)) / 60)) AS Avg_Working_Minutes 
+                     FROM GymPersonnel GP 
+                     JOIN GymSchedule GS ON GP.id = GS.personnel_id 
+                     GROUP BY GP.personnel_name;
+                     """)
+        results = db.session.execute(sql_query, {"p_name": search_term}).all()
         return render_template('results_building.html', results_building = results)
     except Exception as e:
         return show_feedback(f"Error: {e}", success=False)
@@ -209,19 +223,36 @@ def personnel_search():
 @app.route('/event-results', methods=['GET'])
 def event_research():
     search_term = request.args.get('event')
+
     sql_query = "SELECT * FROM Event WHERE name LIKE %s"
     results = db.execute(sql_query, (search_term,))
     return render_template('results_event.html', results_event=results)
-
-
-
-@app.route('/venue-results', method=['GET'])
-def lecture_hall_search():
-    search_term = request.args.get('lecture')
-    sql_query = "SELECT v.name AS venue_name,lh.name_ AS hall_name,lh.address_,lh.capacity FROM LECTURE_HALL lh JOIN Venue v ON lh.venue_id = v.id WHERE lh.capacity > 100;"
-    results = db.execute(sql_query, (search_term,))
-    return render_template('results_venue.html', results_event = results)
 """
+
+
+@app.route('/lecture-hall-results', methods=['GET'])
+def lecture_hall_search():
+    #search_term = request.args.get('lecture')
+    sql_query = text("""
+                 SELECT 
+                 v.name AS venue_name,lh.name_ AS hall_name,
+                 lh.address_,
+                 lh.capacity 
+                 FROM LECTURE_HALL lh 
+                 JOIN Venue v ON lh.venue_id = v.id 
+                 WHERE lh.capacity > 100;
+                 """)
+    results = db.session.execute('result_venue.html').all()
+    return render_template('results_venue.html', results_event = results)
+
+
+@app.route('/personnel/<string:personnel_name>')
+def show_personnel(personnel_name):
+    sql = text("SELECT * FROM GymPersonnel WHERE personnel_name = :p_name")
+    item = db.session.execute(sql, {"p_name": personnel_name}).first()
+    return render_template('detail_personnel.html', item=item)
+
+
 
 
 if __name__ == "__main__":
