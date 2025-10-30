@@ -1,0 +1,13 @@
+<h3>Halls with capacity > {{ search_value }}</h3>
+<ul>
+    {% for hall in results %}
+        <li>
+            <a href="/detail?type=lecture_hall&id={{ hall.venue_id }}">
+                {{ hall.name }} - {{ hall.name_ }}
+            </a>
+            (Capacity: {{ hall.capacity }})
+        </li>
+    {% else %}
+        <li>No halls found matching this criteria.</li>
+    {% endfor %}
+</ul>
