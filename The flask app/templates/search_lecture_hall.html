@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Lecture Halls - Campus Information Center</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+      .dropdown-content {
+        display: none; 
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+      }
+      .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+      .dropdown-content a:hover {background-color: #f1f1f1}
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+    </style>
+</head>
+
+<body>
+    <header class="container header-flex-wrapper">
+        <div id="logo">
+            <img src="{{ url_for('static', filename='campus_logo.png') }}" alt="Campus Information Center">
+            <h1><a href="/">Campus Information Center</a></h1>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li class="dropdown current_page_item"> <a href="javascript:void(0)" class="dropbtn">Menu</a>
+                  <div id="myDropdown" class="dropdown-content">
+                    
+                    <a href="/search-building">Search for a Building</a>
+                    <a href="/search-event">Search for an Event</a>
+                    <a href="/search-venue">Search for a Venue</a>
+                   
+                    
+                  </div>
+                </li>
+                <li><a href="/imprint">Imprint</a></li>
+                <li><a href="/maintenance">Maintenance Page</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="main-content">
+           
+            
+            <h3>Search for Large Lecture Halls</h3>
+            <form action="/lecture-hall-results" method="GET">
+
+              <label>Minimum Capacity:</label>
+              <input type="number" name="min_capacity" placeholder="e.g., 100">
+            
+              <button type="submit">Search</button>
+            
+              <p>Hint: Enter the minimum number of seats required.</p>
+            </form>
+
+        </div>
+    </main>
+
+    <footer class="container">
+        <p>&copy; 2025 Campus Information Center. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
+

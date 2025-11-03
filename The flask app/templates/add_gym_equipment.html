@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Gym Equipment</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header class="container">
+        <h1>Add New Gym Equipment</h1>
+    </header>
+
+    <main class="container">
+        <form action="/handle_add_gym_equipment" method="POST">
+            
+            <div>
+                <label for="gym_input">Gym Building:</label>
+                <select id="gym_input" name="gym_building_id" required>
+                    <option value="" disabled selected>Select a gym</option>
+                    {% for gym in all_gyms %}
+                    <option value="{{ gym.id }}">{{ gym.address_ }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <br>
+
+            <div>
+                <label for="equip_name">Equipment Name:</label>
+                <input type="text" id="equip_name" name="equipment_name" required>
+            </div>
+            <br>
+        
+            <div>
+                <button type="submit">Add Equipment</button>
+            </div>
+        </form>
+        
+        <br>
+        <a href="/maintenance">Back to Maintenance Page</a>
+    </main>
+
+    <footer class="container">
+        <p>&copy; 2025 Campus Information Center.</p>
+    </footer>
+</body>
+</html>

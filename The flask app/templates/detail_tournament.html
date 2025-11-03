@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tournament Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="container">
+        <h1>{{ tournament.Tournament_name }}</h1>
+    </header>
+
+    <main class="container">
+        {% if tournament %}
+            
+            <p><strong>Sport:</strong> {{ tournament.Sport }}</p>
+            <p><strong>Teams Registered:</strong> {{ tournament.Number_of_registered_teams }}</p>
+            <p><strong>Internal Tournament ID:</strong> {{ tournament.Tournament_ID }}</p>
+            <p><strong>Associated Event ID:</strong> {{ tournament.Event_ID }}</p>
+
+        {% else %}
+            <p>Sorry, no tournament was found with that ID.</p>
+        {% endif %}
+        
+        <br>
+        <a href="{{ url_for('search_tournament_form') }}">New Search</a>
+    </main>
+
+    <footer class="container">
+        <p>&copy; 2025 Campus Information Center.</p>
+    </footer>
+</body>
+</html>

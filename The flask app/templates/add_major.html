@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add New Major</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header class="container">
+        <h1>Add a New Major</h1>
+    </header>
+
+    <main class="container">
+        <form action="/handle_add_major" method="POST">
+            <div>
+                <label for="major_name_input">Major Name:</label>
+                <input type="text" id="major_name_input" name="major_name" required>
+            </div>
+            
+            <br>
+            
+            <div>
+                <button type="submit">Add Major</button>
+            </div>
+        </form>
+        
+        <br>
+        <a href="/maintenance">Back to Maintenance Page</a>
+    </main>
+
+    <footer class="container">
+        <p>&copy; 2025 Campus Information Center.</p>
+    </footer>
+</body>
+</html>

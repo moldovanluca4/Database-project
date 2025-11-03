@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Personnel Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="container">
+        <h1>{{ item.personnel_name }}</h1>
+    </header>
+    <main class="container">
+        {% if item %}
+            <p><strong>Name:</strong> {{ item.personnel_name }}</p>
+            <p><strong>Internal ID:</strong> {{ item.id }}</p>
+            <p><strong>Works at Gym (Building ID):</strong> {{ item.gym_building_id }}</p>
+            {% else %}
+            <p>Sorry, no personnel was found with that name.</p>
+        {% endif %}
+        <br>
+        <a href="{{ url_for('show_building_search') }}">Back to Personnel Search</a>
+    </main>
+    <footer class="container">
+        <p>&copy; 2025 Campus Information Center.</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Campus Information Center</title>
+    <link rel="stylesheet" href="/static/style.css">
+
+    <style>
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  .dropdown-content {
+    display: none; 
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+ 
+  .dropdown-content a:hover {background-color: #f1f1f1}
+ 
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+</style>
+    </head>
+
+<body>
+    <header class ="container header-flex-wrapper">
+        <div id="logo">
+            <img src = "/static/campus_logo.png" alt="Campus Information Center">
+            <h1><a href = "index.html">Campus Information Center</a></h1>
+        </div>
+
+        <nav>
+            <ul>
+                <li class = "current_page_item"><a href="index.html">Home</a></li>
+                 <li class="dropdown">
+                  <a href="javascript:void(0)" class="dropbtn" onclick="toggleMenu()">Menu</a>
+                  <div id="myDropdown" class="dropdown-content">
+                    <a href="/search-building">Search for a Building</a>
+                    <a href="/search-event">Search for an Event</a>
+                    <a href="/search-venue">Search for a Venue</a>
+
+                  </div>
+                </li>
+                <li><a href="/imprint">Imprint</a></li>
+                <li><a href="/maintenance">Maintenance Page</a></li>
+        </nav>
+</header>
+
+    <main class="container">
+        <div class = "main-content">
+            <div class = "title">
+            <h2>About us</h2>
+        </div>
+        
+        <p>Welcome to Campus Information Center!</p>
+        <p>
+            Thank you for visiting the Campus Information Center. 
+            Whether you are a student, professor, staff member, 
+            or a guest of the University, 
+            this website is your central hub for staying in touch.
+            We are here to help you stay connected with everything happening 
+            around the university and learn more about our vibrant campus community.
+            </p>
+    <hr>
+    </div>
+    </main>
+    <footer class="container">
+        <p>&copy; 2025 Campus Information Center. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+          document.getElementById("myDropdown").classList.toggle("show");
+        }
+
+        window.onclick = function(event) {
+          if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+              var openDropdown = dropdowns[i];
+              if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+              }
+            }
+          }
+        }
+    </script>
+    </body>
+</html>

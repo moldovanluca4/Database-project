@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tournament Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="container">
+        
+        <h1>Results for: "{{ search_term }}"</h1>
+    </header>
+
+    <main class="container">
+        
+        {% if tournaments %}
+            <ul>
+                
+                {% for t in tournaments %}
+                    <li>
+                        
+                        <a href="{{ url_for('tournament_detail', id=t.Tournament_ID) }}">
+                            {{ t.Tournament_name }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Sorry, no tournaments found for that sport.</p>
+        {% endif %}
+        
+        <br>
+        <a href="{{ url_for('search_tournament_form') }}">New Search</a>
+    </main>
+
+    <footer class="container">
+        <p>&copy; 2025 Campus Information Center.</p>
+    </footer>
+</body>
+</html>

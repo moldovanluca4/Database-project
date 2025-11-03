@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Gym Schedule</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="container">
+        <h1>Add a New Gym Schedule</h1>
+    </header>
+
+    <main class="container">
+        <form action="/handle_add_gym_schedule" method="POST">
+            
+            <div>
+                <label for="gym_id">Select Gym:</label>
+                <select id="gym_id" name="gym_building_id">
+                    {% for gym in all_gyms %}
+                    <option value="{{ gym.building_id }}">{{ gym.address_ }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <br>
+            
+            <div>
+                <label for="personnel_id">Select Personnel:</label>
+                <select id="personnel_id" name="personnel_id">
+                    {% for p in all_personnel %}
+                    <option value="{{ p.id }}">{{ p.personnel_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <br>
+            
+            <div>
+                <label for="days">Working Days:</label>
+                <input type="text" id="days" name="working_days" placeholder="e.g., MWF">
+            </div>
+            
+            <br>
+            
+            <div>
+                <label for="start_time">Start Time:</label>
+                <input type="time" id="start_time" name="start_time">
+            </div>
+            
+            <br>
+            
+            <div>
+                <label for="end_time">End Time:</label>
+                <input type="time" id="end_time" name="end_time">
+            </div>
+
+            <br>
+            
+            <div>
+                <button type="submit">Add Schedule</button>
+            </div>
+        </form>
+        
+        <br>
+        <a href="/maintenance">Back to Maintenance Page</a>
+    </main>
+
+    <footer class="container">
+        <p>&copy; 2025 Campus Information Center.</p>
+    </footer>
+</body>
+</html>

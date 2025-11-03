@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Link Research Hall to Major</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header class="container">
+        <h1>Link a Research Hall to a Major</h1>
+    </header>
+
+    <main class="container">
+        <form action="/handle_link_hall_major" method="POST">
+
+            <div>
+                <label for="hall_input">Research Hall:</label>
+                <select id="hall_input" name="research_hall_id">
+                    {% for hall in all_halls %}
+                    <option value="{{ hall.building_id }}">{{ hall.address_ }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <br>
+            
+            <div>
+                <label for="major_input">Major:</label>
+                <select id="major_input" name="major_id">
+                    {% for major in all_majors %}
+                    <option value="{{ major.id }}">{{ major.major_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <br>
+            
+            <div>
+                <button type="submit">Create Link</button>
+            </div>
+        </form>
+        
+        <br>
+        <a href="/maintenance">Back to Maintenance Page</a>
+    </main>
+
+    <footer class="container">
+        <p>&copy; 2025 Campus Information Center.</p>
+    </footer>
+</body>
+</html>
