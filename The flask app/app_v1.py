@@ -1,23 +1,23 @@
 import os
-import sqlite3
-from flask import Flask, render_template, request, redirect, url_for, g
+import mariadb
+from flask import Flask, render_template, request, redirect, url_for
+import config
 
 app = Flask(__name__)
 
-DATABASE = 'campus.db'
-
-def get_db():
-    db = getattr(g, '_database', None)
-    if db is None:
-        db = g._database = sqlite3.connect(DATABASE)
-        db.row_factory = sqlite3.Row
-    return db
-
-@app.teardown_appcontext
-def close_connection(exception):
-    db = getattr(g, '_database', None)
-    if db is not None:
-        db.close()
+def get_db_connection():
+    try:
+        conn = mariadb.connect(
+            user=config.DB_USER,
+            password=config.DB_PASS,
+            host=config.DB_HOST,
+            database=config.DB_NAME,
+            autocommit=False
+        )
+        return conn
+    except mariadb.Error as e:
+        print(f"Error connecting to MariaDB Platform: {e}")
+        raise e
 
 def show_feedback(message, success=True):
     return f"""
@@ -32,7 +32,7 @@ def show_feedback(message, success=True):
         <p style="color: {'green' if success else 'red'};">
             {message}
         </p>
-        <a href="{ url_for('maintenance') }">Back to Maintenance Page</a> </b>
+        <a href="{ url_for('maintenance') }">Back to Maintenance Page</a> <br>
         <a href="{ url_for('home')}">Back to Home Page</a>
     </body>
     </html>
@@ -56,65 +56,102 @@ def add_major():
 
 @app.route("/handle_add_major", methods=["POST"])
 def handle_add_major():
-    db = get_db()
+    conn = None
+    cursor = None
     try:
         major_name = request.form['major_name']
-        sql = "INSERT INTO Majors (major_name) VALUES (:major_name)"
-        db.execute(sql, {"major_name": major_name})
-        db.commit()
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        sql = "INSERT INTO Majors (major_name) VALUES (?)"
+        cursor.execute(sql, (major_name,))
+        conn.commit()
+        
         return show_feedback(f"Success! Added major: {major_name}", success=True)
-    except sqlite3.Error as e:
-        db.rollback()
+    except mariadb.Error as e:
+        if conn: conn.rollback()
         return show_feedback(f"Database Error: {e}", success=False)
     except Exception as e:
-        db.rollback()
+        if conn: conn.rollback()
         return show_feedback(f"Error: {e}", success=False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
 
 @app.route("/add_book")
 def add_book():
+    conn = None
+    cursor = None
     try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
         sql = "SELECT B.id, B.address_ FROM IRC I JOIN Building B ON I.building_id = B.id ORDER BY B.address_"
-        irc_buildings = get_db().execute(sql).fetchall()
+        cursor.execute(sql)
+        irc_buildings = cursor.fetchall()
+        
         return render_template("add_book.html", all_ircs=irc_buildings)
     except Exception as e:
         return show_feedback(f"Error loading page: {e}", success=False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
    
 @app.route("/handle_add_book", methods=["POST"])
 def handle_add_book():
-    db = get_db()
+    conn = None
+    cursor = None
     try:
         irc_building_id = request.form['irc_building_id']
         title = request.form['title']
         book_availability = request.form['book_availability']
         book_type = request.form['book_type']
         
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
         sql = """
             INSERT INTO Books (irc_building_id, title, book_availability, book_type) 
-            VALUES (:irc_id, :title, :avail, :type)
+            VALUES (?, ?, ?, ?)
         """
-        params = {"irc_id": irc_building_id, "title": title, "avail": book_availability, "type": book_type}
-        db.execute(sql, params)
-        db.commit()
+        params = (irc_building_id, title, book_availability, book_type)
+        cursor.execute(sql, params)
+        conn.commit()
+        
         return show_feedback(f"Success! Added book: {title}", success=True)
-    except sqlite3.Error as e:
-        db.rollback()
+    except mariadb.Error as e:
+        if conn: conn.rollback()
         return show_feedback(f"Database Error: {e}", success=False)
     except Exception as e:
-        db.rollback()
+        if conn: conn.rollback()
         return show_feedback(f"Error: {e}", success=False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
 
 @app.route("/add_club")
 def add_club():
+    conn = None
+    cursor = None
     try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
         sql = "SELECT B.id, B.address_ FROM SCC S JOIN Building B ON S.building_id = B.id ORDER BY B.address_"
-        scc_buildings = get_db().execute(sql).fetchall()
+        cursor.execute(sql)
+        scc_buildings = cursor.fetchall()
+        
         return render_template("add_club.html", all_sccs=scc_buildings)
     except Exception as e:
         return show_feedback(f"Error loading page: {e}", success=False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
 
 @app.route("/handle_add_club", methods=["POST"])
 def handle_add_club():
-    db = get_db()
+    conn = None
+    cursor = None
     try:
         scc_building_id = request.form['scc_building_id']
         club_name = request.form['club_name']
@@ -122,61 +159,97 @@ def handle_add_club():
         start_time = request.form['start_time']
         end_time = request.form['end_time']
 
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
         sql = """
             INSERT INTO Clubs (scc_building_id, club_name, schedule_days, start_time, end_time) 
-            VALUES (:scc_id, :name, :days, :start, :end)
+            VALUES (?, ?, ?, ?, ?)
         """
-        params = {"scc_id": scc_building_id, "name": club_name, "days": schedule_days, "start": start_time, "end": end_time}
-        db.execute(sql, params)
-        db.commit()
+        params = (scc_building_id, club_name, schedule_days, start_time, end_time)
+        cursor.execute(sql, params)
+        conn.commit()
+        
         return show_feedback(f"Success! Added club: {club_name}", success=True)
-    except sqlite3.Error as e:
-        db.rollback()
+    except mariadb.Error as e:
+        if conn: conn.rollback()
         return show_feedback(f"Database Error: {e}", success=False)
     except Exception as e:
-        db.rollback()
+        if conn: conn.rollback()
         return show_feedback(f"Error: {e}", success=False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
 
 @app.route("/add_gym_equipment")
 def add_gym_equipment():
+    conn = None
+    cursor = None
     try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
         sql = "SELECT B.id, B.address_ FROM Gym G JOIN Building B ON G.building_id = B.id ORDER BY B.address_"
-        gyms = get_db().execute(sql).fetchall()
+        cursor.execute(sql)
+        gyms = cursor.fetchall()
+        
         return render_template("add_gym_equipment.html", all_gyms=gyms)
     except Exception as e:
         return show_feedback(f"Error loading page: {e}", success=False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
 
 @app.route("/handle_add_gym_equipment", methods=["POST"])
 def handle_add_gym_equipment():
-    db = get_db()
+    conn = None
+    cursor = None
     try:
         gym_building_id = request.form['gym_building_id']
         equip_name = request.form['equipment_name']
         
-        sql = "INSERT INTO GymEquipment (gym_building_id, equipment_name) VALUES (:gym_id, :name)"
-        params = {"gym_id": gym_building_id, "name": equip_name}
-        db.execute(sql, params)
-        db.commit()
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        sql = "INSERT INTO GymEquipment (gym_building_id, equipment_name) VALUES (?, ?)"
+        params = (gym_building_id, equip_name)
+        cursor.execute(sql, params)
+        conn.commit()
+        
         return show_feedback(f"Success! Added equipment: {equip_name}", success=True)
-    except sqlite3.Error as e:
-        db.rollback()
+    except mariadb.Error as e:
+        if conn: conn.rollback()
         return show_feedback(f"Database Error: {e}", success=False)
     except Exception as e:
-        db.rollback()
+        if conn: conn.rollback()
         return show_feedback(f"Error: {e}", success=False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
 
 @app.route("/add_tournament")
 def add_tournament():
+    conn = None
+    cursor = None
     try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
         sql = "SELECT id, name FROM Venue ORDER BY name"
-        all_venues = get_db().execute(sql).fetchall()
+        cursor.execute(sql)
+        all_venues = cursor.fetchall()
+        
         return render_template("add_tournament.html", all_events=all_venues)
     except Exception as e:
         return show_feedback(f"Error loading page: {e}", success=False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
 
 @app.route("/handle_add_tournament", methods=["POST"])
 def handle_add_tournament():
-    db = get_db()
+    conn = None
+    cursor = None
     try:
         tourn_name = request.form['Tournament_name']
         teams = request.form['Number_of_registered_teams']
@@ -184,109 +257,160 @@ def handle_add_tournament():
         venue_id = request.form['venue_id']
         event_date = request.form['event_date']
 
-        sql_event = "INSERT INTO Event (Venue_ID, Date_) VALUES (:venue_id, :date)"
-        cursor = db.execute(sql_event, {"venue_id": venue_id, "date": event_date})
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        sql_event = "INSERT INTO Event (Venue_ID, Date_) VALUES (?, ?)"
+        cursor.execute(sql_event, (venue_id, event_date))
         
         new_event_id = cursor.lastrowid
         
         sql_tourn = """
             INSERT INTO Tournament (Event_ID, Tournament_name, Number_of_registered_teams, Sport) 
-            VALUES (:event_id, :name, :teams, :sport)
+            VALUES (?, ?, ?, ?)
         """
-        params = {"event_id": new_event_id, "name": tourn_name, "teams": teams, "sport": sport}
-        db.execute(sql_tourn, params)
+        params = (new_event_id, tourn_name, teams, sport)
+        cursor.execute(sql_tourn, params)
         
-        db.commit()
+        conn.commit()
         return show_feedback(f"Success! Added tournament: {tourn_name}", success=True)
-    except sqlite3.Error as e:
-        db.rollback()
+    except mariadb.Error as e:
+        if conn: conn.rollback()
         return show_feedback(f"Database Error: {e}", success=False)
     except Exception as e:
-        db.rollback()
+        if conn: conn.rollback()
         return show_feedback(f"Error: {e}", success=False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
 
 @app.route("/add_venue")
 def add_venue():
+    conn = None
+    cursor = None
     try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
         sql = "SELECT id, address_ FROM Building ORDER BY address_"
-        buildings = get_db().execute(sql).fetchall()
+        cursor.execute(sql)
+        buildings = cursor.fetchall()
+        
         return render_template("add_venue.html", all_buildings=buildings)
     except Exception as e:
         return show_feedback(f"Error loading page: {e}", success=False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
 
 @app.route("/handle_add_venue", methods=["POST"])
 def handle_add_venue():
-    db = get_db()
+    conn = None
+    cursor = None
     try:
         venue_name = request.form['name']
         start_time = request.form['start_time']
         finish_time = request.form['finish_time']
         building_id = request.form['building_id']
 
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
         sql = """
             INSERT INTO Venue (name, start_time, finish_time, building_id) 
-            VALUES (:name, :start, :finish, :b_id)
+            VALUES (?, ?, ?, ?)
         """
-        params = {"name": venue_name, "start": start_time, "finish": finish_time, "b_id": building_id}
-        db.execute(sql, params)
-        db.commit()
+        params = (venue_name, start_time, finish_time, building_id)
+        cursor.execute(sql, params)
+        conn.commit()
+        
         return show_feedback(f"Success! Added venue: {venue_name}", success=True)
-    except sqlite3.Error as e:
-        db.rollback()
+    except mariadb.Error as e:
+        if conn: conn.rollback()
         return show_feedback(f"Database Error: {e}", success=False)
     except Exception as e:
-        db.rollback()
+        if conn: conn.rollback()
         return show_feedback(f"Error: {e}", success=False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
 
 @app.route("/link_hall_to_major")
 def link_hall_to_major():
+    conn = None
+    cursor = None
     try:
-        db = get_db()
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
         halls_sql = "SELECT building_id, address_ FROM Research_hall R JOIN Building B ON R.building_id = B.id ORDER BY address_"
+        cursor.execute(halls_sql)
+        halls = cursor.fetchall()
+        
         majors_sql = "SELECT id, major_name FROM Majors ORDER BY major_name"
-
-        halls = db.execute(halls_sql).fetchall()
-        majors = db.execute(majors_sql).fetchall()
+        cursor.execute(majors_sql)
+        majors = cursor.fetchall()
         
         return render_template("link_hall_to_major.html", all_halls=halls, all_majors=majors)
     except Exception as e:
         return show_feedback(f"Error loading page: {e}", success=False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
 
 @app.route("/handle_link_hall_major", methods=["POST"])
 def handle_link_hall_major():
-    db = get_db()
+    conn = None
+    cursor = None
     try:
         hall_id = request.form['research_hall_id']
         major_id = request.form['major_id']
         
-        sql = "INSERT INTO ResearchHallMajors (research_hall_building_id, major_id) VALUES (:hall_id, :major_id)"
-        db.execute(sql, {"hall_id": hall_id, "major_id": major_id})
-        db.commit()
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        sql = "INSERT INTO ResearchHallMajors (research_hall_building_id, major_id) VALUES (?, ?)"
+        cursor.execute(sql, (hall_id, major_id))
+        conn.commit()
+        
         return show_feedback(f"Success! Linked Hall {hall_id} to Major {major_id}.", success=True)
-    except sqlite3.Error as e:
-        db.rollback()
+    except mariadb.Error as e:
+        if conn: conn.rollback()
         return show_feedback(f"Database Error: {e}", success=False)
     except Exception as e:
-        db.rollback()
+        if conn: conn.rollback()
         return show_feedback(f"Error: {e}", success=False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
 
 @app.route("/add_gym_schedule")
 def add_gym_schedule():
+    conn = None
+    cursor = None
     try:
-        db = get_db()
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
         gyms_sql = "SELECT building_id, address_ FROM Gym G JOIN Building B ON G.building_id = B.id ORDER BY address_"
+        cursor.execute(gyms_sql)
+        gyms = cursor.fetchall()
+        
         personnel_sql = "SELECT id, personnel_name FROM GymPersonnel ORDER BY personnel_name"
-
-        gyms = db.execute(gyms_sql).fetchall()
-        personnel = db.execute(personnel_sql).fetchall()
+        cursor.execute(personnel_sql)
+        personnel = cursor.fetchall()
 
         return render_template("add_gym_schedule.html", all_gyms=gyms, all_personnel=personnel)
     except Exception as e:
         return show_feedback(f"Error loading page: {e}", success=False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
 
 @app.route("/handle_add_gym_schedule", methods=["POST"])
 def handle_add_gym_schedule():
-    db = get_db()
+    conn = None
+    cursor = None
     try:
         gym_id = request.form['gym_building_id']
         personnel_id = request.form['personnel_id']
@@ -294,38 +418,55 @@ def handle_add_gym_schedule():
         start = request.form['start_time']
         end = request.form['end_time']
         
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
         sql = """
             INSERT INTO GymSchedule (gym_building_id, personnel_id, working_days, start_time, end_time) 
-            VALUES (:gym_id, :p_id, :days, :start, :end)
+            VALUES (?, ?, ?, ?, ?)
         """
-        params = {"gym_id": gym_id, "p_id": personnel_id, "days": days, "start": start, "end": end}
-        db.execute(sql, params)
-        db.commit()
+        params = (gym_id, personnel_id, days, start, end)
+        cursor.execute(sql, params)
+        conn.commit()
+        
         return show_feedback(f"Success! Added schedule for personnel {personnel_id}.", success=True)
-    except sqlite3.Error as e:
-        db.rollback()
+    except mariadb.Error as e:
+        if conn: conn.rollback()
         return show_feedback(f"Database Error: {e}", success=False)
     except Exception as e:
-        db.rollback()
+        if conn: conn.rollback()
         return show_feedback(f"Error: {e}", success=False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
     
 @app.route("/add_service_schedule")
 def add_service_schedule():
+    conn = None
+    cursor = None
     try:
-        db = get_db()
-        rlh_sql = "SELECT B.id as building_id, B.address_ FROM RLH R JOIN Building B ON R.building_id = B.id ORDER BY B.address_"
-        services_sql = "SELECT id, service_name_ FROM RLHServices ORDER BY service_name_"
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
 
-        rlh_buildings = db.execute(rlh_sql).fetchall()
-        services = db.execute(services_sql).fetchall()
+        rlh_sql = "SELECT B.id as building_id, B.address_ FROM RLH R JOIN Building B ON R.building_id = B.id ORDER BY B.address_"
+        cursor.execute(rlh_sql)
+        rlh_buildings = cursor.fetchall()
+        
+        services_sql = "SELECT id, service_name_ FROM RLHServices ORDER BY service_name_"
+        cursor.execute(services_sql)
+        services = cursor.fetchall()
         
         return render_template("add_service_schedule.html", all_rlhs=rlh_buildings, all_services=services)
     except Exception as e:
         return show_feedback(f"Error loading page: {e}", success=False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
 
 @app.route("/handle_add_service_schedule", methods=["POST"])
 def handle_add_service_schedule():
-    db = get_db()
+    conn = None
+    cursor = None
     try:
         rlh_id = request.form['rlh_building_id']
         service_id = request.form['service_id']
@@ -333,20 +474,27 @@ def handle_add_service_schedule():
         start = request.form['start_time']
         end = request.form['end_time']
 
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
         sql = """
             INSERT INTO RLHServicesSchedule (rlh_building_id, service_id, service_schedule_days, start_time, end_time) 
-            VALUES (:rlh_id, :s_id, :days, :start, :end)
+            VALUES (?, ?, ?, ?, ?)
         """
-        params = {"rlh_id": rlh_id, "s_id": service_id, "days": days, "start": start, "end": end}
-        db.execute(sql, params)
-        db.commit()
+        params = (rlh_id, service_id, days, start, end)
+        cursor.execute(sql, params)
+        conn.commit()
+        
         return show_feedback(f"Success! Added schedule for service {service_id}.", success=True)
-    except sqlite3.Error as e:
-        db.rollback()
+    except mariadb.Error as e:
+        if conn: conn.rollback()
         return show_feedback(f"Database Error: {e}", success=False)
     except Exception as e:
-        db.rollback()
+        if conn: conn.rollback()
         return show_feedback(f"Error: {e}", success=False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
 
 @app.route('/search-building')
 def show_building_search():
@@ -362,45 +510,65 @@ def show_venue_search():
 
 @app.route('/building-results', methods=['GET'])
 def personnel_search():
+    conn = None
+    cursor = None
     try:
         search_term = request.args.get('personnel_name', '')
         search_param = f"%{search_term}%"
-        
+
         sql_query = """
             SELECT 
              GP.id, 
              GP.personnel_name AS name, 
-             ROUND(AVG((strftime('%s', GS.end_time) - strftime('%s', GS.start_time)) / 60)) AS Avg_Working_Minutes 
+             ROUND(AVG(TIME_TO_SEC(TIMEDIFF(GS.end_time, GS.start_time)) / 60)) AS Avg_Working_Minutes 
             FROM GymPersonnel GP 
             LEFT JOIN GymSchedule GS ON GP.id = GS.personnel_id 
-            WHERE GP.personnel_name LIKE :p_name_like
+            WHERE GP.personnel_name LIKE ?
             GROUP BY GP.id, GP.personnel_name;
         """
         
-        results = get_db().execute(sql_query, {"p_name_like": search_param}).fetchall()
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        cursor.execute(sql_query, (search_param,))
+        results = cursor.fetchall()
+        
         return render_template('results_building.html', results_building=results)
     except Exception as e:
         return show_feedback(f"Error: {e}", success=False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
 
 
 @app.route('/event-results', methods=['GET'])
 def event_research():
+    conn = None
+    cursor = None
     try:
         search_term = request.args.get('sport_name', '')
         search_param = f"%{search_term}%"
 
-        sql_query = "SELECT * FROM Tournament WHERE Sport LIKE :sport_name_like"
+        sql_query = "SELECT * FROM Tournament WHERE Sport LIKE ?"
         
-        results = get_db().execute(sql_query, {"sport_name_like": search_param}).fetchall()
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        cursor.execute(sql_query, (search_param,))
+        results = cursor.fetchall()
         
         return render_template('results_tournament.html', tournaments=results, search_term=search_term)
     except Exception as e:
         return show_feedback(f"Error: {e}", success=False)
-
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
 
 
 @app.route('/lecture-hall-results', methods=['GET'])
 def lecture_hall_search():
+    conn = None
+    cursor = None
     try:
         min_capacity = request.args.get('min_capacity', 0)
         
@@ -410,40 +578,67 @@ def lecture_hall_search():
              lh.address_, lh.capacity 
             FROM LECTURE_HALL lh 
             JOIN Venue v ON lh.venue_id = v.id 
-            WHERE lh.capacity >= :capacity
+            WHERE lh.capacity >= ?
             ORDER BY lh.capacity DESC;
         """
         
-        results = get_db().execute(sql_query, {"capacity": min_capacity}).fetchall()
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        cursor.execute(sql_query, (min_capacity,))
+        results = cursor.fetchall()
         
         return render_template('results_venue.html', results_venue=results)
     except Exception as e:
         return show_feedback(f"Error: {e}", success=False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
 
 @app.route('/tournament/<int:id>')
 def tournament_detail(id):
+    conn = None
+    cursor = None
     try:
-        sql = "SELECT * FROM Tournament WHERE Tournament_ID = :id"
-        tournament = get_db().execute(sql, {"id": id}).fetchone()
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        sql = "SELECT * FROM Tournament WHERE Tournament_ID = ?"
+        cursor.execute(sql, (id,))
+        tournament = cursor.fetchone()
+        
         if tournament:
             return render_template('detail_tournament.html', tournament=tournament)
         else:
             return show_feedback("Tournament not found", success=False)
     except Exception as e:
         return show_feedback(f"Error: {e}", success=False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
 
 
 @app.route('/personnel/<string:personnel_name>')
 def show_personnel(personnel_name):
+    conn = None
+    cursor = None
     try:
-        sql = "SELECT * FROM GymPersonnel WHERE personnel_name = :p_name"
-        item = get_db().execute(sql, {"p_name": personnel_name}).fetchone()
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        sql = "SELECT * FROM GymPersonnel WHERE personnel_name = ?"
+        cursor.execute(sql, (personnel_name,))
+        item = cursor.fetchone()
+        
         if item:
             return render_template('detail_personnel.html', item=item)
         else:
             return show_feedback("Personnel not found", success=False)
     except Exception as e:
         return show_feedback(f"Error: {e}", success=False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
 
 if __name__ == "__main__":
     app.run(debug=True)
