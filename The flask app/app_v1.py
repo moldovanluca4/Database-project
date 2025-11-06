@@ -1,6 +1,6 @@
 import os
 import mariadb
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 import config
 
 app = Flask(__name__)
@@ -487,6 +487,106 @@ def handle_add_service_schedule():
         
         return show_feedback(f"Success! Added schedule for service {service_id}.", success=True)
     except mariadb.Error as e:
+        if conn: conn.rollback()
+        return show_feedback(f"Database Error: {e}", success=False)
+    except Exception as e:
+        if conn: conn.rollback()
+        return show_feedback(f"Error: {e}", success=False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
+
+@app.route("/add_user")
+def add_user():
+    conn = None
+    cursor = None
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary = True)
+
+        user_sql = "SELECT user_name FROM users WHERE user_name=?"
+        cursor.execute(user_sql)
+        existing_user = cursor.fetchnone()
+
+        if existing_user:
+            flash("Username is already taken. Please choose another")
+            return redirect(url_for('maintenance'))
+        
+
+        sql_user = "SELECT user_name FROM users"
+        cursor.execute(sql_user)
+        users = cursor.fetchall()
+        
+        return render_template("add_user.html", all_users = users)
+    except Exception as e:
+        return show_feedback(f"Error loading page: {e}", success= False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
+    
+@app.route("/handle_add_user", methods=["POST"])
+def handle_add_user():
+    conn = None
+    cursor = None
+
+    form_username = request.form.get('user_name')
+
+    if not form_username:
+            flash("Username required.",'error')
+            return redirect(url_for('index'))
+    
+    
+
+    try:
+        insert_user = "INSERT INTO users (username) VALUES (?)"
+        cursor.execute(insert_user, form_username)
+        conn.commit()
+        flash(f"account for {form_username} was created")
+    except mariadb.Error as e:
+        if conn: conn.rollback()
+        return show_feedback(f"Database error: {e}", success=False)
+    except Exception as e:
+        if conn: conn.rollback()
+        return show_feedback(f"Error: {e}", success= False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
+
+@app.route("/add_password")
+def add_password():
+    conn = None
+    cursor = None
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dicionary = True)
+
+        password_sql = "SELECT user_password FROM users"
+        cursor.execute(password_sql)
+        passwords = cursor.fetchall()
+        return render_template("add_passwords.html", all_passwords = passwords)
+    except Exception as e:
+        return show_feedback(f"Error loading page: {e}", success=False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
+
+@app.route("/handle_add_password")
+def handle_add_password():
+    cursor = None
+    conn = None
+    try:
+        form_password = request.form['user_password']
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        sql_password = "INSERT INTO users (form_password) VALUES (?)"
+        cursor.execute(sql_password)
+        conn.commit()
+
+        
         if conn: conn.rollback()
         return show_feedback(f"Database Error: {e}", success=False)
     except Exception as e:
