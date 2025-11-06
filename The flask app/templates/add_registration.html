@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Registration</title> <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header class="container">
+        <h1>Add a New User Registration</h1> </header>
+
+    <main class="container">
+        <form action="/handle_add_registration" method="POST">
+            
+            <div>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <br>
+
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <br>
+
+            <div>
+                <button type="submit">Add User</button> </div>
+        </form>
+        
+        <br>
+        <a href="/maintenance">Back to Maintenance Page</a>
+    </main>
+
+    <footer class="container">
+        <p>&copy; 2025 Campus Information Center.</p>
+    </footer>
+</body>
+</html>
