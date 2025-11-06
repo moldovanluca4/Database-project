@@ -524,9 +524,9 @@ def handle_add_service_schedule():
         if conn: conn.close()
 
 
-@app.route('/add_register')
+@app.route('/add_registration')
 def register():
-    return render_template("register.html")
+    return render_template("add_registration.html")
 
 
 @app.route('/handle_add_register', methods = ['POST'])
