@@ -4,7 +4,10 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 import config
 
 app = Flask(__name__)
+app.secret_key = 'super-secret-key'
 
+
+#helper function for establishing the connection
 def get_db_connection():
     try:
         conn = mariadb.connect(
@@ -12,13 +15,16 @@ def get_db_connection():
             password=config.DB_PASS,
             host=config.DB_HOST,
             database=config.DB_NAME,
-            autocommit=False
+            autocommit=False                #this concept means we are in transaction mode good for security purposes, this means we are not saving anything inside the database until we call conn commit and if something happens we call conn rollback and undo everything
         )
+
         return conn
     except mariadb.Error as e:
         print(f"Error connecting to MariaDB Platform: {e}")
         raise e
 
+
+#custom function that shows a simple html page in case of a success or error
 def show_feedback(message, success=True):
     return f"""
     <!DOCTYPE html>
@@ -38,17 +44,38 @@ def show_feedback(message, success=True):
     </html>
     """
 
+#static page - home page
 @app.route("/")
 def home():
     return render_template("index.html")
 
+#static page - maintenance page
 @app.route("/maintenance")
 def maintenance():
     return render_template("maintenance.html")
 
+#static page - imprint page
 @app.route("/imprint")
 def imprint():
     return render_template("imprint.html")
+
+
+#for adding items we are going to use the two routes method
+
+#First we have a GET route for the /add_something routes 
+#theyre job is to prepare and display the html forms, they run the SELECT query(sometimes) to get data needed for the dropdown menus(not implement yet for all but its and idea for the future of this project)
+#in the end it passes data into the render template
+
+#Second is the POST route for /handle_add_something 
+#this rote only accepts POST data ehich is what html forms send to the db
+#it reads the input of the user 
+#it opens a db connection and a cursora(its like a pointer that allows us to traverse and process result sets from a SELECT query one row at the time within the stored programs)
+#it executes an INSERT operation
+#IMPORTANT - we use ? placeholders from security purposes to prevent SQL injection attacks
+#we call conn commit to save the new data only after everything went ok - also good for the security
+#we use the show feedback to report a succes or a failure
+#error handling is a must we catch the errors in time and we call rollback to cancel the transaction and show an error message - we do this so we dont save data with problems 
+#finally - ensures cursor and conn are closed which prevents the db from running out of connections
 
 @app.route("/add_major")
 def add_major():
@@ -496,105 +523,67 @@ def handle_add_service_schedule():
         if cursor: cursor.close()
         if conn: conn.close()
 
-@app.route("/add_user")
-def add_user():
+
+@app.route('/add_register')
+def register():
+    return render_template("register.html")
+
+
+@app.route('/handle_add_register', methods = ['POST'])
+def handle_register():
     conn = None
     cursor = None
 
     try:
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary = True)
+        username = request.form['user_name']
+        password = request.form['user_password']
 
-        user_sql = "SELECT user_name FROM users WHERE user_name=?"
-        cursor.execute(user_sql)
-        existing_user = cursor.fetchnone()
-
-        if existing_user:
-            flash("Username is already taken. Please choose another")
-            return redirect(url_for('maintenance'))
+        if not username or password:
+            flash('Username and password are required here')
+            return redirect(url_for('add_register'))
         
-
-        sql_user = "SELECT user_name FROM users"
-        cursor.execute(sql_user)
-        users = cursor.fetchall()
-        
-        return render_template("add_user.html", all_users = users)
-    except Exception as e:
-        return show_feedback(f"Error loading page: {e}", success= False)
-    finally:
-        if cursor: cursor.close()
-        if conn: conn.close()
-    
-@app.route("/handle_add_user", methods=["POST"])
-def handle_add_user():
-    conn = None
-    cursor = None
-
-    form_username = request.form.get('user_name')
-
-    if not form_username:
-            flash("Username required.",'error')
-            return redirect(url_for('index'))
-    
-    
-
-    try:
-        insert_user = "INSERT INTO users (username) VALUES (?)"
-        cursor.execute(insert_user, form_username)
-        conn.commit()
-        flash(f"account for {form_username} was created")
-    except mariadb.Error as e:
-        if conn: conn.rollback()
-        return show_feedback(f"Database error: {e}", success=False)
-    except Exception as e:
-        if conn: conn.rollback()
-        return show_feedback(f"Error: {e}", success= False)
-    finally:
-        if cursor: cursor.close()
-        if conn: conn.close()
-
-@app.route("/add_password")
-def add_password():
-    conn = None
-    cursor = None
-
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor(dicionary = True)
-
-        password_sql = "SELECT user_password FROM users"
-        cursor.execute(password_sql)
-        passwords = cursor.fetchall()
-        return render_template("add_passwords.html", all_passwords = passwords)
-    except Exception as e:
-        return show_feedback(f"Error loading page: {e}", success=False)
-    finally:
-        if cursor: cursor.close()
-        if conn: conn.close()
-
-@app.route("/handle_add_password")
-def handle_add_password():
-    cursor = None
-    conn = None
-    try:
-        form_password = request.form['user_password']
 
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        sql_password = "INSERT INTO users (form_password) VALUES (?)"
-        cursor.execute(sql_password)
-        conn.commit()
+        sql_check = "SELECT user_name FROM users WHERE user_name = ?"
+        cursor.execute(sql_check, (username,))
+        existing_user = cursor.fetchone()
 
+        if existing_user:
+            flash("Username taken - choose another")
+            return redirect(url_for('add_register'))
         
+
+        sql_insert_user = "INSERT INTO users (username, password) VALUES (?,?)"
+        cursor.execute(sql_insert_user)
+        conn.sommit()
+
+        return show_feedback(f"Succes registration has succeded, welcome {username}", success=True)
+    except mariadb.Error as e:
         if conn: conn.rollback()
-        return show_feedback(f"Database Error: {e}", success=False)
+        return show_feedback(f"Database error: {e}", success=False)
     except Exception as e:
         if conn: conn.rollback()
         return show_feedback(f"Error: {e}", success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
+
+
+
+#The Search pattern also uses a two routes approach
+#its a same two route approach like before but the difference between the search pattern and add pattern is that the search uses GET for the both routes
+
+#First we have the search forms in the routes of form /search-something
+#the first part is simple just renders the html template with the search box
+
+#Second we show the search results in the routes of form /something-results
+#it reads the item to be searched from the URL 
+#it uses request args get to get it
+#it builds a query using the important placeholders - again for security
+#it fetches all the results and passes them to a result template or a result html page
+
 
 @app.route('/search-building')
 def show_building_search():
@@ -694,6 +683,16 @@ def lecture_hall_search():
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
+
+
+#The Detail Page approach
+
+#this approach uses a dynamic URL to show information about one specific item in this case a specific tournament taking place or a specific gym worker
+#int id captures a number from the URL and passes it as an id argument to the function
+#the function runs a query for that specific id
+#and renders a detailed html page about that single item data
+#this part will be improved
+
 
 @app.route('/tournament/<int:id>')
 def tournament_detail(id):
