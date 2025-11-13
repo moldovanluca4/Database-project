@@ -6,11 +6,11 @@ path_to_error_log_files = "/var/log/apache2/error_log"
 
 
 csv_file_access_logs = open('statistics_access.csv', 'wb')
-writer = csv.writer(csv_file_access_logs)
+writer = csv.writer(csv_file_access_logs, quoting=csv.QUOTE_ALL)
 writer.writerow(['IP Address', 'Timeline','Page Accessed','Browser'])
 
 csv_file_error_logs = open('statistics_error.csv', 'wb')
-writer_error = csv.writer(csv_file_error_logs)
+writer_error = csv.writer(csv_file_error_logs, quoting=csv.QUOTE_ALL)
 writer_error.writerow(['IP Address', 'Timeline','Error Message'])
 
 with open(path_to_log_files, 'r') as log_file:
