@@ -1,9 +1,11 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import numpy as np
 
 
 df = pd.read_csv('statistics_access.csv', on_bad_lines='skip')
+
 
 accesses_october = df[df['Timeline'].str.contains('/Oct/2025')].shape[0]
 accesses_november = df[df['Timeline'].str.contains('/Nov/2025')].shape[0]
@@ -37,7 +39,7 @@ plt.tight_layout()
 
 
 
-ip_counts = df['IP Address'].value_counts().head(10) 
+ip_counts = df['IP Address'].value_counts().head(10)
 print(ip_counts)
 
 plt.figure(figsize=(12, 7))
@@ -46,6 +48,33 @@ plt.title('Top 10 IP Addresses by Access Count', fontsize=16)
 plt.xlabel('Number of Accesses', fontsize=12)
 plt.ylabel('IP Address', fontsize=12)
 plt.grid(axis='x', linestyle='--', alpha=0.7)
+plt.tight_layout()
+
+
+dif = pd.read_csv('statistics_error.csv', on_bad_lines='skip')
+
+dif['Timestamp'] = pd.to_datetime(dif['Timeline'], format='mixed', errors='coerce')
+
+dif = dif.dropna(subset=['Timestamp']).sort_values(by='Timestamp')
+
+
+plt.figure(figsize=(12, 8))
+(markerline, stemlines, _) = plt.stem(dif['Timestamp'], [0] * len(dif), orientation='horizontal', basefmt=' ')
+plt.setp(markerline, 'marker', 'o', 'color', 'red', 'markersize', 8, 'zorder', 3)
+plt.setp(stemlines, 'color', 'darkgray', 'linestyle', ':', 'linewidth', 1.5)
+
+for _, row in dif.iterrows():
+    message = row['Error Message'].split(':')[0].strip()
+    label = f"{row['IP Address']} | {message}"
+    plt.text(row['Timestamp'], 0.015, label, va='center', ha='left', fontsize=9, alpha=0.9)
+
+plt.title('Error Timeline: IP and Error Summary', fontsize=16, pad=15)
+ax = plt.gca()
+ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %d %H:%M'))
+plt.xticks(rotation=30, ha='right')
+ax.yaxis.set_visible(False)
+ax.spines[['left', 'top', 'right']].set_visible(False)
+plt.grid(axis='x', linestyle='--', alpha=0.4)
 plt.tight_layout()
 
 
