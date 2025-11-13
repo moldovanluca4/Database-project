@@ -53,29 +53,34 @@ plt.tight_layout()
 
 dif = pd.read_csv('statistics_error.csv', on_bad_lines='skip')
 
-dif['Timestamp'] = pd.to_datetime(dif['Timeline'], format='mixed', errors='coerce')
+dif['Timestamp'] = pd.to_datetime(dif['Timeline'], format='%a %b %d %H:%M:%S.%f %Y', errors='coerce')
 
 dif = dif.dropna(subset=['Timestamp']).sort_values(by='Timestamp')
 
+if not dif.empty:
+    plt.figure(figsize=(12, 8))
+    
+    (markerline, stemlines, _) = plt.stem(dif['Timestamp'], [0] * len(dif), orientation='horizontal', basefmt=' ')
+    plt.setp(markerline, 'marker', 'o', 'color', 'red', 'markersize', 8, 'zorder', 3)
+    plt.setp(stemlines, 'color', 'darkgray', 'linestyle', ':', 'linewidth', 1.5)
 
-plt.figure(figsize=(12, 8))
-(markerline, stemlines, _) = plt.stem(dif['Timestamp'], [0] * len(dif), orientation='horizontal', basefmt=' ')
-plt.setp(markerline, 'marker', 'o', 'color', 'red', 'markersize', 8, 'zorder', 3)
-plt.setp(stemlines, 'color', 'darkgray', 'linestyle', ':', 'linewidth', 1.5)
+    for _, row in dif.iterrows():
+        message_summary = row['Error Message'].split(':')[0].strip()
+        
+        label = f"{row['IP Address']} | {message_summary}"
+        
+        plt.text(row['Timestamp'], 0.015, label, va='center', ha='left', fontsize=9, alpha=0.9)
 
-for _, row in dif.iterrows():
-    message = row['Error Message'].split(':')[0].strip()
-    label = f"{row['IP Address']} | {message}"
-    plt.text(row['Timestamp'], 0.015, label, va='center', ha='left', fontsize=9, alpha=0.9)
-
-plt.title('Error Timeline: IP and Error Summary', fontsize=16, pad=15)
-ax = plt.gca()
-ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %d %H:%M'))
-plt.xticks(rotation=30, ha='right')
-ax.yaxis.set_visible(False)
-ax.spines[['left', 'top', 'right']].set_visible(False)
-plt.grid(axis='x', linestyle='--', alpha=0.4)
-plt.tight_layout()
-
-
+    plt.title('Error Timeline: Originator (IP), Error Summary, and Time', fontsize=16, pad=15)
+    
+    ax = plt.gca()
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %d %H:%M'))
+    plt.xticks(rotation=30, ha='right')
+    ax.yaxis.set_visible(False)
+    ax.spines[['left', 'top', 'right']].set_visible(False)
+    plt.grid(axis='x', linestyle='--', alpha=0.4)
+    plt.tight_layout()
+else:
+    print("No valid timestamps found in error data for plotting.")
+    
 plt.show()
