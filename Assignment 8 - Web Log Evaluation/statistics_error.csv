@@ -1,6 +1,8 @@
 IP Address,Timeline,Error Message
-172.16.32.20:34938,Fri Oct 31 04:31:24.373032 2025,AH01276: Cannot serve directory /home/lmoldovan/public_html/The-flask-app/images/: No matching DirectoryIndex (index.html,index.php) found
-172.16.113.225:64821,Mon Nov 03 13:36:42.536176 2025,/home/lmoldovan/public_html/The-flask-app/.htaccess: Invalid command 'TestCommand'
-10.20.30.40:12345,Wed Nov 05 10:30:10.000000 2025,/home/lmoldovan/public_html/The-flask-app/favicon.ico: File does not exist
-N/A,Thu Nov 06 09:15:00.123456 2025,[pid 1234] AH00124: Request exceeded the limit for /home/lmoldovan/public_html/The-flask-app/handle_add_book
-192.168.1.5:54321,Fri Nov 07 14:02:00.000000 2025,/home/lmoldovan/public_html/The-flask-app/add_club: File does not exist
+192.168.20.1:45000,Wed Oct 01 08:00:00.000000 2025,"AH01276: Initial directory load failed, check configuration"
+172.16.32.20:34938,Fri Oct 31 04:31:24.373032 2025,"AH01276: Cannot serve directory /home/lmoldovan/public_html/The-flask-app/images/: No matching DirectoryIndex (index.html,index.php) found"
+172.16.113.225:64821,Mon Nov 03 13:36:42.536176 2025,"/home/lmoldovan/public_html/The-flask-app/.htaccess: Invalid command 'TestCommand', perhaps check spelling"
+10.20.30.40:12345,Wed Nov 05 10:30:10.000000 2025,"/home/lmoldovan/public_html/The-flask-app/favicon.ico: File does not exist, request was logged"
+192.168.1.5:54321,Fri Nov 07 14:02:00.000000 2025,"/home/lmoldovan/public_html/The-flask-app/add_club: File does not exist on server, 404 error"
+10.20.30.40:12345,Sat Nov 08 09:45:30.900000 2025,"AH01276: Directory access forbidden, please check permissions"
+172.16.20.3:55123,Sun Nov 09 23:59:59.000000 2025,"AH00124: Request processing timeout, connection closed"
