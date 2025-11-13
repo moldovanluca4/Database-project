@@ -20,29 +20,36 @@ def get_db_connection():
 
         return conn
     except mariadb.Error as e:
-        print(f"Error connecting to MariaDB Platform: {e}")
+        print("Error connecting to MariaDB Platform: {}".format(e))
         raise e
 
 
 #custom function that shows a simple html page in case of a success or error
 def show_feedback(message, success=True):
-    return f"""
+    html_template = """
     <!DOCTYPE html>
     <html>
     <head>
         <title>Submission Feedback</title>
-        <link rel="stylesheet" href="{ url_for('static', filename='css/style.css') }">
+        <link rel="stylesheet" href="{css_url}">
     </head>
     <body style="padding: 20px;">
         <h1>Submission Feedback</h1>
-        <p style="color: {'green' if success else 'red'};">
+        <p style="color: {color};">
             {message}
         </p>
-        <a href="{ url_for('maintenance') }">Back to Maintenance Page</a> <br>
-        <a href="{ url_for('home')}">Back to Home Page</a>
+        <a href="{maint_url}">Back to Maintenance Page</a> <br>
+        <a href="{home_url}">Back to Home Page</a>
     </body>
     </html>
     """
+    return html_template.format(
+        css_url=url_for('static', filename='css/style.css'),
+        color='green' if success else 'red',
+        message=message,
+        maint_url=url_for('maintenance'),
+        home_url=url_for('home')
+    )
 
 #static page - home page
 @app.route("/")
@@ -94,13 +101,13 @@ def handle_add_major():
         cursor.execute(sql, (major_name,))
         conn.commit()
         
-        return show_feedback(f"Success! Added major: {major_name}", success=True)
+        return show_feedback("Success! Added major: {}".format(major_name), success=True)
     except mariadb.Error as e:
         if conn: conn.rollback()
-        return show_feedback(f"Database Error: {e}", success=False)
+        return show_feedback("Database Error: {}".format(e), success=False)
     except Exception as e:
         if conn: conn.rollback()
-        return show_feedback(f"Error: {e}", success=False)
+        return show_feedback("Error: {}".format(e), success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
@@ -119,11 +126,11 @@ def add_book():
         
         return render_template("add_book.html", all_ircs=irc_buildings)
     except Exception as e:
-        return show_feedback(f"Error loading page: {e}", success=False)
+        return show_feedback("Error loading page: {}".format(e), success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
-   
+    
 @app.route("/handle_add_book", methods=["POST"])
 def handle_add_book():
     conn = None
@@ -145,13 +152,13 @@ def handle_add_book():
         cursor.execute(sql, params)
         conn.commit()
         
-        return show_feedback(f"Success! Added book: {title}", success=True)
+        return show_feedback("Success! Added book: {}".format(title), success=True)
     except mariadb.Error as e:
         if conn: conn.rollback()
-        return show_feedback(f"Database Error: {e}", success=False)
+        return show_feedback("Database Error: {}".format(e), success=False)
     except Exception as e:
         if conn: conn.rollback()
-        return show_feedback(f"Error: {e}", success=False)
+        return show_feedback("Error: {}".format(e), success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
@@ -170,7 +177,7 @@ def add_club():
         
         return render_template("add_club.html", all_sccs=scc_buildings)
     except Exception as e:
-        return show_feedback(f"Error loading page: {e}", success=False)
+        return show_feedback("Error loading page: {}".format(e), success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
@@ -197,13 +204,13 @@ def handle_add_club():
         cursor.execute(sql, params)
         conn.commit()
         
-        return show_feedback(f"Success! Added club: {club_name}", success=True)
+        return show_feedback("Success! Added club: {}".format(club_name), success=True)
     except mariadb.Error as e:
         if conn: conn.rollback()
-        return show_feedback(f"Database Error: {e}", success=False)
+        return show_feedback("Database Error: {}".format(e), success=False)
     except Exception as e:
         if conn: conn.rollback()
-        return show_feedback(f"Error: {e}", success=False)
+        return show_feedback("Error: {}".format(e), success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
@@ -222,7 +229,7 @@ def add_gym_equipment():
         
         return render_template("add_gym_equipment.html", all_gyms=gyms)
     except Exception as e:
-        return show_feedback(f"Error loading page: {e}", success=False)
+        return show_feedback("Error loading page: {}".format(e), success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
@@ -243,13 +250,13 @@ def handle_add_gym_equipment():
         cursor.execute(sql, params)
         conn.commit()
         
-        return show_feedback(f"Success! Added equipment: {equip_name}", success=True)
+        return show_feedback("Success! Added equipment: {}".format(equip_name), success=True)
     except mariadb.Error as e:
         if conn: conn.rollback()
-        return show_feedback(f"Database Error: {e}", success=False)
+        return show_feedback("Database Error: {}".format(e), success=False)
     except Exception as e:
         if conn: conn.rollback()
-        return show_feedback(f"Error: {e}", success=False)
+        return show_feedback("Error: {}".format(e), success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
@@ -268,7 +275,7 @@ def add_tournament():
         
         return render_template("add_tournament.html", all_events=all_venues)
     except Exception as e:
-        return show_feedback(f"Error loading page: {e}", success=False)
+        return show_feedback("Error loading page: {}".format(e), success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
@@ -300,13 +307,13 @@ def handle_add_tournament():
         cursor.execute(sql_tourn, params)
         
         conn.commit()
-        return show_feedback(f"Success! Added tournament: {tourn_name}", success=True)
+        return show_feedback("Success! Added tournament: {}".format(tourn_name), success=True)
     except mariadb.Error as e:
         if conn: conn.rollback()
-        return show_feedback(f"Database Error: {e}", success=False)
+        return show_feedback("Database Error: {}".format(e), success=False)
     except Exception as e:
         if conn: conn.rollback()
-        return show_feedback(f"Error: {e}", success=False)
+        return show_feedback("Error: {}".format(e), success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
@@ -325,7 +332,7 @@ def add_venue():
         
         return render_template("add_venue.html", all_buildings=buildings)
     except Exception as e:
-        return show_feedback(f"Error loading page: {e}", success=False)
+        return show_feedback("Error loading page: {}".format(e), success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
@@ -351,13 +358,13 @@ def handle_add_venue():
         cursor.execute(sql, params)
         conn.commit()
         
-        return show_feedback(f"Success! Added venue: {venue_name}", success=True)
+        return show_feedback("Success! Added venue: {}".format(venue_name), success=True)
     except mariadb.Error as e:
         if conn: conn.rollback()
-        return show_feedback(f"Database Error: {e}", success=False)
+        return show_feedback("Database Error: {}".format(e), success=False)
     except Exception as e:
         if conn: conn.rollback()
-        return show_feedback(f"Error: {e}", success=False)
+        return show_feedback("Error: {}".format(e), success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
@@ -380,7 +387,7 @@ def link_hall_to_major():
         
         return render_template("link_hall_to_major.html", all_halls=halls, all_majors=majors)
     except Exception as e:
-        return show_feedback(f"Error loading page: {e}", success=False)
+        return show_feedback("Error loading page: {}".format(e), success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
@@ -400,13 +407,13 @@ def handle_link_hall_major():
         cursor.execute(sql, (hall_id, major_id))
         conn.commit()
         
-        return show_feedback(f"Success! Linked Hall {hall_id} to Major {major_id}.", success=True)
+        return show_feedback("Success! Linked Hall {} to Major {}.".format(hall_id, major_id), success=True)
     except mariadb.Error as e:
         if conn: conn.rollback()
-        return show_feedback(f"Database Error: {e}", success=False)
+        return show_feedback("Database Error: {}".format(e), success=False)
     except Exception as e:
         if conn: conn.rollback()
-        return show_feedback(f"Error: {e}", success=False)
+        return show_feedback("Error: {}".format(e), success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
@@ -429,7 +436,7 @@ def add_gym_schedule():
 
         return render_template("add_gym_schedule.html", all_gyms=gyms, all_personnel=personnel)
     except Exception as e:
-        return show_feedback(f"Error loading page: {e}", success=False)
+        return show_feedback("Error loading page: {}".format(e), success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
@@ -456,13 +463,13 @@ def handle_add_gym_schedule():
         cursor.execute(sql, params)
         conn.commit()
         
-        return show_feedback(f"Success! Added schedule for personnel {personnel_id}.", success=True)
+        return show_feedback("Success! Added schedule for personnel {}.".format(personnel_id), success=True)
     except mariadb.Error as e:
         if conn: conn.rollback()
-        return show_feedback(f"Database Error: {e}", success=False)
+        return show_feedback("Database Error: {}".format(e), success=False)
     except Exception as e:
         if conn: conn.rollback()
-        return show_feedback(f"Error: {e}", success=False)
+        return show_feedback("Error: {}".format(e), success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
@@ -485,7 +492,7 @@ def add_service_schedule():
         
         return render_template("add_service_schedule.html", all_rlhs=rlh_buildings, all_services=services)
     except Exception as e:
-        return show_feedback(f"Error loading page: {e}", success=False)
+        return show_feedback("Error loading page: {}".format(e), success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
@@ -512,13 +519,13 @@ def handle_add_service_schedule():
         cursor.execute(sql, params)
         conn.commit()
         
-        return show_feedback(f"Success! Added schedule for service {service_id}.", success=True)
+        return show_feedback("Success! Added schedule for service {}.".format(service_id), success=True)
     except mariadb.Error as e:
         if conn: conn.rollback()
-        return show_feedback(f"Database Error: {e}", success=False)
+        return show_feedback("Database Error: {}".format(e), success=False)
     except Exception as e:
         if conn: conn.rollback()
-        return show_feedback(f"Error: {e}", success=False)
+        return show_feedback("Error: {}".format(e), success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
@@ -603,7 +610,7 @@ def personnel_search():
     cursor = None
     try:
         search_term = request.args.get('personnel_name', '')
-        search_param = f"%{search_term}%"
+        search_param = "%{}%".format(search_term)
 
         sql_query = """
             SELECT 
@@ -624,7 +631,7 @@ def personnel_search():
         
         return render_template('results_building.html', results_building=results)
     except Exception as e:
-        return show_feedback(f"Error: {e}", success=False)
+        return show_feedback("Error: {}".format(e), success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
@@ -636,7 +643,7 @@ def event_research():
     cursor = None
     try:
         search_term = request.args.get('sport_name', '')
-        search_param = f"%{search_term}%"
+        search_param = "%{}%".format(search_term)
 
         sql_query = "SELECT * FROM Tournament WHERE Sport LIKE ?"
         
@@ -648,7 +655,7 @@ def event_research():
         
         return render_template('results_tournament.html', tournaments=results, search_term=search_term)
     except Exception as e:
-        return show_feedback(f"Error: {e}", success=False)
+        return show_feedback("Error: {}".format(e), success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
@@ -679,7 +686,7 @@ def lecture_hall_search():
         
         return render_template('results_venue.html', results_venue=results)
     except Exception as e:
-        return show_feedback(f"Error: {e}", success=False)
+        return show_feedback("Error: {}".format(e), success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
@@ -711,7 +718,7 @@ def tournament_detail(id):
         else:
             return show_feedback("Tournament not found", success=False)
     except Exception as e:
-        return show_feedback(f"Error: {e}", success=False)
+        return show_feedback("Error: {}".format(e), success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
@@ -734,10 +741,13 @@ def show_personnel(personnel_name):
         else:
             return show_feedback("Personnel not found", success=False)
     except Exception as e:
-        return show_feedback(f"Error: {e}", success=False)
+        return show_feedback("Error: {}".format(e), success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+    

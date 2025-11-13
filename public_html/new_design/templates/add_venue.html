@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Venue</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header class="container">
+        <h1>Add a New Venue</h1>
+    </header>
+
+    <main class="container">
+        <form action="/handle_add_venue" method="POST">
+            
+            <div>
+                <label for="venue_name">Venue Name:</label>
+                <input type="text" id="venue_name" name="name" required>
+            </div>
+            <br>
+
+            <div>
+                <label for="start_time">Start Time:</label>
+                <input type="time" id="start_time" name="start_time">
+            </div>
+            <br>
+            
+            <div>
+                <label for="finish_time">Finish Time:</label>
+                <input type="time" id="finish_time" name="finish_time">
+            </div>
+            <div>
+                <button type="submit">Add Venue</button>
+            </div>
+        </form>
+        
+        <br>
+        <a href="/maintenance">Back to Maintenance Page</a>
+    </main>
+
+    <footer class="container">
+        <p>&copy; 2025 Campus Information Center.</p>
+    </footer>
+</body>
+</html>

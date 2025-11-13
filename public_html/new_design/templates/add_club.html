@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add New Club</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header class="container">
+        <h1>Add a New Club</h1>
+    </header>
+
+    <main class="container">
+        <form action="/handle_add_club" method="POST">
+            
+            <div>
+                <label for="club_name_input">Club Name:</label>
+                <input type="text" id="club_name_input" name="club_name" required>
+            </div>
+            
+            <br>
+            
+            <div>
+                <label for="schedule_input">Schedule Days:</label>
+                <input type="text" id="schedule_input" name="schedule_days" placeholder="e.g., MWF">
+            </div>
+            
+            <br>
+            
+            <div>
+                <label for="start_time_input">Start Time:</label>
+                <input type="time" id="start_time_input" name="start_time">
+            </div>
+            
+            <br>
+            
+            <div>
+                <label for="end_time_input">End Time:</label>
+                <input type="time" id="end_time_input" name="end_time">
+            </div>
+            
+            <br>
+            
+            <div>
+                <button type="submit">Add Club</button>
+            </div>
+        </form>
+        
+        <br>
+        <a href="/maintenance">Back to Maintenance Page</a>
+    </main>
+
+    <footer class="container">
+        <p>&copy; 2025 Campus Information Center.</p>
+    </footer>
+</body>
+</html>
