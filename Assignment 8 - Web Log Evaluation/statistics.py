@@ -3,10 +3,10 @@ import matplotlib as plt
 import numpy as np
 
 
-df = pd.read_csv('statistic.csv')
+df = pd.read_csv('statistics_access.csv')
 
-time_line_october = ""
-time_line_november = ""
+#accesses_october = df[df[]]
+#time_line_november = ""
 
 
 print(df.head())
