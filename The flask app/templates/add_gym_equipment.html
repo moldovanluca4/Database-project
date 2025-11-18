@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Add Gym Equipment</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <header class="container">
@@ -11,7 +11,7 @@
     </header>
 
     <main class="container">
-        <form action="/handle_add_gym_equipment" method="POST">
+        <form action="{{url_for('handle_add_gym_equipment')}}" method="POST">
             
             <div>
                 <label for="gym_input">Gym Building:</label>
@@ -36,7 +36,7 @@
         </form>
         
         <br>
-        <a href="/maintenance">Back to Maintenance Page</a>
+        <a href="{{url_for('maintenance')}}">Back to Maintenance Page</a>
     </main>
 
     <footer class="container">

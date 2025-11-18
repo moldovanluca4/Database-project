@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Results Venue</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
@@ -19,7 +19,7 @@
   {% endfor %}
 </ul>
 
-<a href="/search-venue">Back to search</a>
+<a href="{{url_for('show_venue_search')}}">Back to search</a>
 </ul>
 </body>
 </html>

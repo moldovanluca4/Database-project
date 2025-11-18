@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Link Research Hall to Major</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <header class="container">
@@ -11,7 +11,7 @@
     </header>
 
     <main class="container">
-        <form action="/handle_link_hall_major" method="POST">
+        <form action="{{url_for('handle_link_hall_major')}}" method="POST">
 
             <div>
                 <label for="hall_input">Research Hall:</label>
@@ -41,7 +41,7 @@
         </form>
         
         <br>
-        <a href="/maintenance">Back to Maintenance Page</a>
+        <a href="{{url_for('maintenance')}}">Back to Maintenance Page</a>
     </main>
 
     <footer class="container">

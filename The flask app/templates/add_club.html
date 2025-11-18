@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Add New Club</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
 </head>
 <body>
     <header class="container">
@@ -11,7 +11,7 @@
     </header>
 
     <main class="container">
-        <form action="/handle_add_club" method="POST">
+        <form action="{{url_for('handle_add_club')}}" method="POST">
             
             <div>
                 <label for="scc_input">SCC Building:</label>
@@ -54,7 +54,7 @@
         </form>
         
         <br>
-        <a href="/maintenance">Back to Maintenance Page</a>
+        <a href="{{url_for('maintenance')}}">Back to Maintenance Page</a>
     </main>
 
     <footer class="container">
