@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Campus Information Center</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
 
     <style>
   .dropdown {
@@ -36,24 +36,24 @@
 <body>
     <header class ="container header-flex-wrapper">
         <div id="logo">
-            <img src = "/static/campus_logo.png" alt="Campus Information Center">
-            <h1><a href = "index.html">Campus Information Center</a></h1>
+            <img src = "{{url_for('static', filename='campus_logo.png')}}">
+            <h1><a href = "{{url_for('home')}}">Campus Information Center</a></h1>
         </div>
 
         <nav>
             <ul>
-                <li class = "current_page_item"><a href="index.html">Home</a></li>
+                <li class = "current_page_item"><a href="{{url_for('home')}}">Home</a></li>
                  <li class="dropdown">
                   <a href="javascript:void(0)" class="dropbtn" onclick="toggleMenu()">Menu</a>
                   <div id="myDropdown" class="dropdown-content">
-                    <a href="/search-building">Search for a Building</a>
-                    <a href="/search-event">Search for an Event</a>
-                    <a href="/search-venue">Search for a Venue</a>
+                    <a href="{{url_for('show_building_search')}}">Search for Gym personnel</a>
+                    <a href="{{url_for('show_event_search')}}">Search for a sport tournament</a>
+                    <a href="{{url_for('show_venue_search')}}">Search for a Lecture hall</a>
 
                   </div>
                 </li>
-                <li><a href="/imprint">Imprint</a></li>
-                <li><a href="/maintenance">Maintenance Page</a></li>
+                <li><a href="{{url_for('imprint')}}">Imprint</a></li>
+                <li><a href="{{url_for('maintenance')}}">Maintenance Page</a></li>
         </nav>
 </header>
 
