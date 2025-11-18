@@ -45,7 +45,7 @@ def show_feedback(message, success=True):
     </html>
     """
     return html_template.format(
-        css_url=url_for('static', filename='css/style.css'),
+        css_url=url_for('static', filename='style.css'),
         color='green' if success else 'red',
         message=message,
         maint_url=url_for('maintenance'),
@@ -117,7 +117,6 @@ def handle_add_major():
 def add_book():
     conn = None
     cursor = None
-    return render_template("add_book.html")
     try:
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
