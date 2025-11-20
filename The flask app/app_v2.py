@@ -1,7 +1,8 @@
 import os
 import mysql.connector
 from mysql.connector import Error
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+import json
 import config
 
 app = Flask(__name__)
@@ -691,6 +692,42 @@ def lecture_hall_search():
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
+
+
+# The new search function for assignment 9
+
+@app.route('/new-search-building')
+def new_search_building():
+    return render_template('new_search_building.html')
+
+@app.route('/new-search-lecture-hall')
+def new_search_lecture_hall():
+    return render_template('new_search_lecture_hall.html')
+
+@app.route('/new-search-venue')
+def new_search_venue():
+    return render_template('new_search_venue.html')
+
+@app.route('/handle-new-search-building')
+def handle_new_search_building():
+    conn = None
+    cursor = None
+    try:
+        search = request.args.get('personnel_name')
+        sql_query = """ 
+            SELECT * FROM GymPersonnel;       
+        """
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute(sql_query, (search,))
+        results = cursor.fetchall()
+        return jsonify(matching_result = results)
+    except Exception as e:
+        return show_feedback("Error: {}".format(e), success=False)
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
+
 
 
 #The Detail Page approach
