@@ -728,6 +728,11 @@ def handle_new_search_building():
         if cursor: cursor.close()
         if conn: conn.close()
 
+@app.route('/handle-new-search-venue')
+def handle_new_search_venue():
+
+@app.route('/handle-new-search-event')
+def handle_new_search_event():
 
 
 #The Detail Page approach
