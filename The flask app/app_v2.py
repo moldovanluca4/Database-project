@@ -1,6 +1,8 @@
 import os
-import mariadb
-from flask import Flask, render_template, request, redirect, url_for, flash
+import mysql.connector
+from mysql.connector import Error
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+import json
 import config
 
 app = Flask(__name__)
@@ -10,7 +12,7 @@ app.secret_key = 'super-secret-key'
 #helper function for establishing the connection
 def get_db_connection():
     try:
-        conn = mariadb.connect(
+        conn = mysql.connector.connect(
             user=config.DB_USER,
             password=config.DB_PASS,
             host=config.DB_HOST,
@@ -19,7 +21,7 @@ def get_db_connection():
         )
 
         return conn
-    except mariadb.Error as e:
+    except Error as e:
         print("Error connecting to MariaDB Platform: {}".format(e))
         raise e
 
@@ -44,7 +46,7 @@ def show_feedback(message, success=True):
     </html>
     """
     return html_template.format(
-        css_url=url_for('static', filename='css/style.css'),
+        css_url=url_for('static', filename='style.css'),
         color='green' if success else 'red',
         message=message,
         maint_url=url_for('maintenance'),
@@ -97,12 +99,12 @@ def handle_add_major():
         conn = get_db_connection()
         cursor = conn.cursor()
         
-        sql = "INSERT INTO Majors (major_name) VALUES (?)"
+        sql = "INSERT INTO Majors (major_name) VALUES (%s)"
         cursor.execute(sql, (major_name,))
         conn.commit()
         
         return show_feedback("Success! Added major: {}".format(major_name), success=True)
-    except mariadb.Error as e:
+    except Error as e:
         if conn: conn.rollback()
         return show_feedback("Database Error: {}".format(e), success=False)
     except Exception as e:
@@ -146,14 +148,14 @@ def handle_add_book():
         
         sql = """
             INSERT INTO Books (irc_building_id, title, book_availability, book_type) 
-            VALUES (?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s)
         """
         params = (irc_building_id, title, book_availability, book_type)
         cursor.execute(sql, params)
         conn.commit()
         
         return show_feedback("Success! Added book: {}".format(title), success=True)
-    except mariadb.Error as e:
+    except Error as e:
         if conn: conn.rollback()
         return show_feedback("Database Error: {}".format(e), success=False)
     except Exception as e:
@@ -198,14 +200,14 @@ def handle_add_club():
         
         sql = """
             INSERT INTO Clubs (scc_building_id, club_name, schedule_days, start_time, end_time) 
-            VALUES (?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s)
         """
         params = (scc_building_id, club_name, schedule_days, start_time, end_time)
         cursor.execute(sql, params)
         conn.commit()
         
         return show_feedback("Success! Added club: {}".format(club_name), success=True)
-    except mariadb.Error as e:
+    except Error as e:
         if conn: conn.rollback()
         return show_feedback("Database Error: {}".format(e), success=False)
     except Exception as e:
@@ -245,13 +247,13 @@ def handle_add_gym_equipment():
         conn = get_db_connection()
         cursor = conn.cursor()
         
-        sql = "INSERT INTO GymEquipment (gym_building_id, equipment_name) VALUES (?, ?)"
+        sql = "INSERT INTO GymEquipment (gym_building_id, equipment_name) VALUES (%s, %s)"
         params = (gym_building_id, equip_name)
         cursor.execute(sql, params)
         conn.commit()
         
         return show_feedback("Success! Added equipment: {}".format(equip_name), success=True)
-    except mariadb.Error as e:
+    except Error as e:
         if conn: conn.rollback()
         return show_feedback("Database Error: {}".format(e), success=False)
     except Exception as e:
@@ -294,21 +296,21 @@ def handle_add_tournament():
         conn = get_db_connection()
         cursor = conn.cursor()
         
-        sql_event = "INSERT INTO Event (Venue_ID, Date_) VALUES (?, ?)"
+        sql_event = "INSERT INTO Event (Venue_ID, Date_) VALUES (%s, %s)"
         cursor.execute(sql_event, (venue_id, event_date))
         
         new_event_id = cursor.lastrowid
         
         sql_tourn = """
             INSERT INTO Tournament (Event_ID, Tournament_name, Number_of_registered_teams, Sport) 
-            VALUES (?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s)
         """
         params = (new_event_id, tourn_name, teams, sport)
         cursor.execute(sql_tourn, params)
         
         conn.commit()
         return show_feedback("Success! Added tournament: {}".format(tourn_name), success=True)
-    except mariadb.Error as e:
+    except Error as e:
         if conn: conn.rollback()
         return show_feedback("Database Error: {}".format(e), success=False)
     except Exception as e:
@@ -352,14 +354,14 @@ def handle_add_venue():
         
         sql = """
             INSERT INTO Venue (name, start_time, finish_time, building_id) 
-            VALUES (?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s)
         """
         params = (venue_name, start_time, finish_time, building_id)
         cursor.execute(sql, params)
         conn.commit()
         
         return show_feedback("Success! Added venue: {}".format(venue_name), success=True)
-    except mariadb.Error as e:
+    except Error as e:
         if conn: conn.rollback()
         return show_feedback("Database Error: {}".format(e), success=False)
     except Exception as e:
@@ -403,12 +405,12 @@ def handle_link_hall_major():
         conn = get_db_connection()
         cursor = conn.cursor()
         
-        sql = "INSERT INTO ResearchHallMajors (research_hall_building_id, major_id) VALUES (?, ?)"
+        sql = "INSERT INTO ResearchHallMajors (research_hall_building_id, major_id) VALUES (%s, %s)"
         cursor.execute(sql, (hall_id, major_id))
         conn.commit()
         
         return show_feedback("Success! Linked Hall {} to Major {}.".format(hall_id, major_id), success=True)
-    except mariadb.Error as e:
+    except Error as e:
         if conn: conn.rollback()
         return show_feedback("Database Error: {}".format(e), success=False)
     except Exception as e:
@@ -457,14 +459,14 @@ def handle_add_gym_schedule():
         
         sql = """
             INSERT INTO GymSchedule (gym_building_id, personnel_id, working_days, start_time, end_time) 
-            VALUES (?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s)
         """
         params = (gym_id, personnel_id, days, start, end)
         cursor.execute(sql, params)
         conn.commit()
         
         return show_feedback("Success! Added schedule for personnel {}.".format(personnel_id), success=True)
-    except mariadb.Error as e:
+    except Error as e:
         if conn: conn.rollback()
         return show_feedback("Database Error: {}".format(e), success=False)
     except Exception as e:
@@ -513,14 +515,14 @@ def handle_add_service_schedule():
         
         sql = """
             INSERT INTO RLHServicesSchedule (rlh_building_id, service_id, service_schedule_days, start_time, end_time) 
-            VALUES (?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s)
         """
         params = (rlh_id, service_id, days, start, end)
         cursor.execute(sql, params)
         conn.commit()
         
         return show_feedback("Success! Added schedule for service {}.".format(service_id), success=True)
-    except mariadb.Error as e:
+    except Error as e:
         if conn: conn.rollback()
         return show_feedback("Database Error: {}".format(e), success=False)
     except Exception as e:
@@ -553,7 +555,7 @@ def handle_register():
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        sql_check = "SELECT user_name FROM users WHERE user_name = ?"
+        sql_check = "SELECT user_name FROM users WHERE user_name = %s"
         cursor.execute(sql_check, (username,))
         existing_user = cursor.fetchone()
 
@@ -562,17 +564,17 @@ def handle_register():
             return redirect(url_for('add_register'))
         
 
-        sql_insert_user = "INSERT INTO users (username, password) VALUES (?,?)"
-        cursor.execute(sql_insert_user)
-        conn.sommit()
+        sql_insert_user = "INSERT INTO users (username, password) VALUES (%s,%s)"
+        cursor.execute(sql_insert_user, (username, password))
+        conn.commit()
 
-        return show_feedback(f"Succes registration has succeded, welcome {username}", success=True)
-    except mariadb.Error as e:
+        return show_feedback("Succes registration has succeded, welcome {}".format(username), success=True)
+    except Error as e:
         if conn: conn.rollback()
-        return show_feedback(f"Database error: {e}", success=False)
+        return show_feedback("Database error: {}".format(e), success=False)
     except Exception as e:
         if conn: conn.rollback()
-        return show_feedback(f"Error: {e}", success=False)
+        return show_feedback("Error: {}".format(e), success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
@@ -619,7 +621,7 @@ def personnel_search():
              ROUND(AVG(TIME_TO_SEC(TIMEDIFF(GS.end_time, GS.start_time)) / 60)) AS Avg_Working_Minutes 
             FROM GymPersonnel GP 
             LEFT JOIN GymSchedule GS ON GP.id = GS.personnel_id 
-            WHERE GP.personnel_name LIKE ?
+            WHERE GP.personnel_name LIKE %s
             GROUP BY GP.id, GP.personnel_name;
         """
         
@@ -645,7 +647,7 @@ def event_research():
         search_term = request.args.get('sport_name', '')
         search_param = "%{}%".format(search_term)
 
-        sql_query = "SELECT * FROM Tournament WHERE Sport LIKE ?"
+        sql_query = "SELECT * FROM Tournament WHERE Sport LIKE %s"
         
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
@@ -674,7 +676,7 @@ def lecture_hall_search():
              lh.address_, lh.capacity 
             FROM LECTURE_HALL lh 
             JOIN Venue v ON lh.venue_id = v.id 
-            WHERE lh.capacity >= ?
+            WHERE lh.capacity >= %s
             ORDER BY lh.capacity DESC;
         """
         
@@ -691,6 +693,75 @@ def lecture_hall_search():
         if cursor: cursor.close()
         if conn: conn.close()
 
+
+# The new search function for assignment 9
+
+@app.route('/new-search-building')
+def new_search_building():
+    return render_template('new_search_building.html')
+
+@app.route('/new-search-lecture-hall')
+def new_search_lecture_hall():
+    return render_template('new_search_lecture_hall.html')
+
+@app.route('/new-search-venue')
+def new_search_venue():
+    return render_template('new_search_venue.html')
+
+@app.route('/api/autocomplete/personnel', methods=['GET'])
+def autocomplete_personnel():
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+       
+        cursor.execute("SELECT personnel_name FROM GymPersonnel")
+        results = cursor.fetchall() 
+        
+        names_list = [row[0] for row in results]
+        return jsonify(names_list)
+        
+    except Exception as e:
+        return jsonify([])
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
+
+@app.route('/api/autocomplete/search_personnel')
+def autocomplete_search_personnel():
+    conn = None
+    cursor = None
+    try:
+        search_term = request.args.get('term', '')
+        
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        sql = "SELECT personnel_name FROM GymPersonnel WHERE personnel_name LIKE %s"
+        cursor.execute(sql, ("%" + search_term + "%",))
+        
+        results = cursor.fetchall()
+        names_list = [row[0] for row in results]
+        
+        return jsonify(names_list)
+    except Exception as e:
+        return jsonify([])
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
+
+
+
+#to implement
+@app.route('/handle-new-search-venue')
+def handle_new_search_venue():
+    print("hello")
+
+#to implement
+@app.route('/handle-new-search-event')
+def handle_new_search_event():
+    print("hello")
 
 #The Detail Page approach
 
@@ -709,7 +780,7 @@ def tournament_detail(id):
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         
-        sql = "SELECT * FROM Tournament WHERE Tournament_ID = ?"
+        sql = "SELECT * FROM Tournament WHERE Tournament_ID = %s"
         cursor.execute(sql, (id,))
         tournament = cursor.fetchone()
         
@@ -732,7 +803,7 @@ def show_personnel(personnel_name):
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         
-        sql = "SELECT * FROM GymPersonnel WHERE personnel_name = ?"
+        sql = "SELECT * FROM GymPersonnel WHERE personnel_name = %s"
         cursor.execute(sql, (personnel_name,))
         item = cursor.fetchone()
         
@@ -748,6 +819,3 @@ def show_personnel(personnel_name):
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-
-    

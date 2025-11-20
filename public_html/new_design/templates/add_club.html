@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Add New Club</title>
-    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
     <header class="container">
@@ -12,41 +11,34 @@
     </header>
 
     <main class="container">
-        <form action="{{url_for('handle_add_club')}}" method="POST">
-            
-            <div>
-                <label for="scc_input">SCC Building:</label>
-                <select id="scc_input" name="scc_building_id" required>
-                    <option value="" disabled selected>Select a building</option>
-                    {% for scc in all_sccs %}
-                    <option value="{{ scc.id }}">{{ scc.address_ }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <br>
+        <form action="/handle_add_club" method="POST">
             
             <div>
                 <label for="club_name_input">Club Name:</label>
                 <input type="text" id="club_name_input" name="club_name" required>
             </div>
+            
             <br>
             
             <div>
                 <label for="schedule_input">Schedule Days:</label>
                 <input type="text" id="schedule_input" name="schedule_days" placeholder="e.g., MWF">
             </div>
+            
             <br>
             
             <div>
                 <label for="start_time_input">Start Time:</label>
                 <input type="time" id="start_time_input" name="start_time">
             </div>
+            
             <br>
             
             <div>
                 <label for="end_time_input">End Time:</label>
                 <input type="time" id="end_time_input" name="end_time">
             </div>
+            
             <br>
             
             <div>
@@ -55,7 +47,7 @@
         </form>
         
         <br>
-        <a href="{{url_for('maintenance')}}">Back to Maintenance Page</a>
+        <a href="/maintenance">Back to Maintenance Page</a>
     </main>
 
     <footer class="container">

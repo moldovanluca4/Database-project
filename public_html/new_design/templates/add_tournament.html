@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Add Tournament</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
     <header class="container">
@@ -12,7 +11,7 @@
     </header>
 
     <main class="container">
-        <form action="{{url_for('handle_add_tournament')}}" method="POST">
+        <form action="/handle_add_tournament" method="POST">
             
             <div>
                 <label for="tourn_name">Tournament Name:</label>
@@ -31,21 +30,7 @@
                 <input type="text" id="sport" name="Sport">
             </div>
             <br>
-
-            <div>
-                <label for="venue_input">Venue:</label>
-                <select id="venue_input" name="venue_id" required>
-                    <option value="" disabled selected>Select a venue</option>
-                    {% for event in all_events %} <option value="{{ event.id }}">{{ event.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <br>
-
-            <div>
-                <label for="event_date_input">Event Date and Time:</label>
-                <input type="datetime-local" id="event_date_input" name="event_date" required>
-            </div>
+            
             <br>
             
             <div>
@@ -54,7 +39,7 @@
         </form>
         
         <br>
-        <a href="{{url_for('maintenance')}}">Back to Maintenance Page</a>
+        <a href="/maintenance">Back to Maintenance Page</a>
     </main>
 
     <footer class="container">

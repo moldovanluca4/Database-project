@@ -1,60 +1,54 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add Gym Schedule</title>
-    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+    <title>Add Service Schedule</title>
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
     <header class="container">
-        <h1>Add a New Gym Schedule</h1>
+        <h1>Add a New RLH Service Schedule</h1>
     </header>
 
     <main class="container">
-        <form action="{{url_for('handle_add_gym_schedule')}}" method="POST">
+        <form action="/handle_add_service_schedule" method="POST">
             
             <div>
-                <label for="gym_id">Select Gym:</label>
-                <select id="gym_id" name="gym_building_id">
-                    {% for gym in all_gyms %}
-                    <option value="{{ gym.building_id }}">{{ gym.address_ }}</option>
+                <label for="rlh_id">Select RLH Building:</label>
+                <select id="rlh_id" name="rlh_building_id">
+                    {% for rlh in all_rlhs %}
+                    <option value="{{ rlh.building_id }}">{{ rlh.name }}</option>
                     {% endfor %}
                 </select>
             </div>
-            
             <br>
             
             <div>
-                <label for="personnel_id">Select Personnel:</label>
-                <select id="personnel_id" name="personnel_id">
-                    {% for p in all_personnel %}
-                    <option value="{{ p.id }}">{{ p.personnel_name }}</option>
+                <label for="service_id">Select Service:</label>
+                <select id="service_id" name="service_id">
+                    {% for service in all_services %}
+                    <option value="{{ service.id }}">{{ service.service_name_ }}</option>
                     {% endfor %}
                 </select>
             </div>
-            
             <br>
             
             <div>
-                <label for="days">Working Days:</label>
-                <input type="text" id="days" name="working_days" placeholder="e.g., MWF">
+                <label for="days">Schedule Days:</label>
+                <input type="text" id="days" name="service_schedule_days" placeholder="e.g., TTh">
             </div>
-            
             <br>
             
             <div>
                 <label for="start_time">Start Time:</label>
                 <input type="time" id="start_time" name="start_time">
             </div>
-            
             <br>
             
             <div>
                 <label for="end_time">End Time:</label>
                 <input type="time" id="end_time" name="end_time">
             </div>
-
             <br>
             
             <div>
@@ -63,7 +57,7 @@
         </form>
         
         <br>
-        <a href="{{url_for('maintenance')}}">Back to Maintenance Page</a>
+        <a href="/maintenance">Back to Maintenance Page</a>
     </main>
 
     <footer class="container">

@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Gym details</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 <h3>Search for Gym Personnel</h3>
 
-<form action="/building-results" method="GET">
+<form action="{{url_for('personnel_search')}}" method="GET">
 
   <label>Personnel name:</label>
   

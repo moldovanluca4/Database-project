@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Add Service Schedule</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <header class="container">
@@ -12,7 +12,7 @@
     </header>
 
     <main class="container">
-        <form action="/handle_add_service_schedule" method="POST">
+        <form action="{{url_for('handle_add_service_schedule')}}" method="POST">
             
             <div>
                 <label for="rlh_id">Select RLH Building:</label>
@@ -58,7 +58,7 @@
         </form>
         
         <br>
-        <a href="/maintenance">Back to Maintenance Page</a>
+        <a href="{{url_for('maintenance')}}">Back to Maintenance Page</a>
     </main>
 
     <footer class="container">

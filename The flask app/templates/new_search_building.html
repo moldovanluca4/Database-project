@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Gym Personnel (Bonus)</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+    <script>
+    $( function() {
+       
+        $( "#personnel_input" ).autocomplete({
+            source: "{{ url_for('autocomplete_search_personnel') }}",
+            minLength: 2, 
+            delay: 300    
+        });
+    } );
+    </script>
+</head>
+<body>
+    <header class="container">
+        <h1>Search Gym Personnel</h1>
+    </header>
+
+    <main class="container">
+        <form action="{{ url_for('personnel_search') }}" method="GET">
+            <div class="ui-widget">
+                <label for="personnel_input">Personnel Name: </label>
+                <input id="personnel_input" name="personnel_name" placeholder="Start typing...">
+            </div>
+            <br>
+            <button type="submit">Search</button>
+        </form>
+        <br>
+        <a href="{{ url_for('maintenance') }}">Back to Maintenance Page</a>
+    </main>
+</body>
+</html>
