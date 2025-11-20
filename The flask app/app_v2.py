@@ -708,32 +708,60 @@ def new_search_lecture_hall():
 def new_search_venue():
     return render_template('new_search_venue.html')
 
-@app.route('/handle-new-search-building')
-def handle_new_search_building():
+@app.route('/api/autocomplete/personnel', methods=['GET'])
+def autocomplete_personnel():
     conn = None
     cursor = None
     try:
-        search = request.args.get('personnel_name')
-        sql_query = """ 
-            SELECT * FROM GymPersonnel;       
-        """
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute(sql_query, (search,))
-        results = cursor.fetchall()
-        return jsonify(matching_result = results)
+        cursor = conn.cursor()
+       
+        cursor.execute("SELECT personnel_name FROM GymPersonnel")
+        results = cursor.fetchall() 
+        
+        names_list = [row[0] for row in results]
+        return jsonify(names_list)
+        
     except Exception as e:
-        return show_feedback("Error: {}".format(e), success=False)
+        return jsonify([])
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
 
+@app.route('/api/autocomplete/search_personnel')
+def autocomplete_search_personnel():
+    conn = None
+    cursor = None
+    try:
+        search_term = request.args.get('term', '')
+        
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        sql = "SELECT personnel_name FROM GymPersonnel WHERE personnel_name LIKE %s"
+        cursor.execute(sql, ("%" + search_term + "%",))
+        
+        results = cursor.fetchall()
+        names_list = [row[0] for row in results]
+        
+        return jsonify(names_list)
+    except Exception as e:
+        return jsonify([])
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
+
+
+
+#to implement
 @app.route('/handle-new-search-venue')
 def handle_new_search_venue():
+    print("hello")
 
+#to implement
 @app.route('/handle-new-search-event')
 def handle_new_search_event():
-
+    print("hello")
 
 #The Detail Page approach
 
