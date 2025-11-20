@@ -644,10 +644,10 @@ def event_research():
     conn = None
     cursor = None
     try:
-        search_term = request.args.get('sport_name', '')
+        search_term = request.args.get('tournament_name', '')
         search_param = "%{}%".format(search_term)
 
-        sql_query = "SELECT * FROM Tournament WHERE Sport LIKE %s"
+        sql_query = "SELECT * FROM Tournament WHERE Tournament_name LIKE %s"
         
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
@@ -761,7 +761,33 @@ def handle_new_search_venue():
 #to implement
 @app.route('/handle-new-search-event')
 def handle_new_search_event():
-    print("hello")
+    return render_template('new_search_tournament_pure.html')
+
+@app.route('/api/tournament-names', methods=['GET'])
+def get_tournament_names():
+    """
+    Fulfills Assignment 9: Fetches all unique tournament names for the static autocomplete list.
+    """
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor() 
+        sql_query = "SELECT DISTINCT Tournament_name FROM Tournament ORDER BY Tournament_name"
+        cursor.execute(sql_query)
+        tournament_rows = cursor.fetchall()
+        tournament_list = [row[0] for row in tournament_rows] 
+        return jsonify(tournament_list)
+
+    except Error as e:
+        print(f"Database error fetching names: {e}")
+        return jsonify([]), 500
+    except Exception as e:
+        print(f"General error fetching names: {e}")
+        return jsonify([]), 500
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
 
 #The Detail Page approach
 

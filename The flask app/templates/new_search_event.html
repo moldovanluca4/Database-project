@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tournament Search</title>
+    
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <script src="/static/js/autocomplete.js"></script> 
+    <link rel="stylesheet" href="/static/css/style.css"> 
+</head>
+<body>
+    <header class="container">
+        <h1>Search Tournament</h1>
+    </header>
+
+    <main class="container">
+        
+        <form action="/event-results" method="GET"> 
+            
+            <div>
+                <label for="tournament-search-input">Tournament Name:</label>
+                <input 
+                    type="text" 
+                    id="tournament-search-input" 
+                    name="tournament_name" 
+                    placeholder="Search for tournament"
+                >
+            </div>
+            <br>
+            <div>
+                <button type="submit">Search</button>
+            </div>
+        </form>
+        
+        <p style="margin-top: 20px;">
+            <a href="/">Back to Home</a>
+        </p>
+    </main>
+</body>
+</html>
