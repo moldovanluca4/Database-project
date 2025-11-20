@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Lecture Halls - Campus Information Center</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+    <script>
+    $( function() {
+        $( "#lecture_hall_input" ).autocomplete({ 
+            source: "{{ url_for('autocomplete_lecture_hall') }}", 
+            minLength: 2, 
+            delay: 300    
+        });
+    } );
+    </script>
+
+    <style>
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+      .dropdown-content {
+        display: none; 
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+      }
+      .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+      .dropdown-content a:hover {background-color: #f1f1f1}
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+      /* Added a little spacing for the UI widget */
+      .ui-widget { margin-bottom: 15px; }
+    </style>
+</head>
+
+<body>
+    <header class="container header-flex-wrapper">
+        <div id="logo">
+            <img src="{{ url_for('static', filename='campus_logo.png') }}" alt="Campus Information Center">
+            <h1><a href="{{url_for('home')}}">Campus Information Center</a></h1>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="{{url_for('home')}}">Home</a></li>
+                <li class="dropdown current_page_item"> <a href="javascript:void(0)" class="dropbtn">Menu</a>
+                  <div id="myDropdown" class="dropdown-content">
+                    <a href="{{url_for('show_building_search')}}">Search for a Building</a>
+                    <a href="{{url_for('show_event_search')}}">Search for an Event</a>
+                    <a href="{{url_for('show_venue_search')}}">Search for a Venue</a>
+                  </div>
+                </li>
+                <li><a href="{{url_for('imprint')}}">Imprint</a></li>
+                <li><a href="{{url_for('maintenance')}}">Maintenance Page</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="main-content">
+           
+            <h3>Search for Large Lecture Halls</h3>
+            
+            <form action="{{url_for('lecture_hall_search')}}" method="GET">
+              
+              <div class="ui-widget">
+                  <label for="lecture_hall_input">Lecture Hall Name:</label>
+                  <input id="lecture_hall_input" name="lecture_hall_name" placeholder="e.g. Audimax...">
+              </div>
+
+              <label>Minimum Capacity:</label>
+              <input type="number" name="min_capacity" placeholder="e.g., 100">
+            
+              <button type="submit">Search</button>
+            
+              <p>Hint: Enter the name or minimum number of seats required.</p>
+            </form>
+
+        </div>
+    </main>
+
+    <footer class="container">
+        <p>&copy; 2025 Campus Information Center. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
