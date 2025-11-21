@@ -644,20 +644,22 @@ def event_research():
     conn = None
     cursor = None
     try:
+        
         search_term = request.args.get('tournament_name', '')
-        search_param = "%{}%".format(search_term)
-
-        sql_query = "SELECT * FROM Tournament WHERE Tournament_name LIKE %s"
         
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor(dictionary=True) 
         
-        cursor.execute(sql_query, (search_param,))
+       
+        sql = "SELECT * FROM Tournament WHERE Tournament_name LIKE %s"
+        cursor.execute(sql, ("%" + search_term + "%",))
         results = cursor.fetchall()
         
+        
         return render_template('results_tournament.html', tournaments=results, search_term=search_term)
+        
     except Exception as e:
-        return show_feedback("Error: {}".format(e), success=False)
+        return show_feedback(f"Error: {e}", success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
@@ -668,7 +670,12 @@ def lecture_hall_search():
     conn = None
     cursor = None
     try:
-        min_capacity = request.args.get('min_capacity', 0)
+        name_input = request.args.get('lecture_hall_name', '')
+        name_param = "%{}%".format(name_input)
+        
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
         
         sql_query = """
             SELECT 
@@ -676,23 +683,19 @@ def lecture_hall_search():
              lh.address_, lh.capacity 
             FROM LECTURE_HALL lh 
             JOIN Venue v ON lh.venue_id = v.id 
-            WHERE lh.capacity >= %s
+            WHERE lh.name_ LIKE %s
             ORDER BY lh.capacity DESC;
         """
         
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
-        
-        cursor.execute(sql_query, (min_capacity,))
+        cursor.execute(sql_query, (name_param,))
         results = cursor.fetchall()
         
         return render_template('results_venue.html', results_venue=results)
     except Exception as e:
-        return show_feedback("Error: {}".format(e), success=False)
+        return show_feedback(f"Error: {e}", success=False)
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
-
 
 # The new search function for assignment 9
 
@@ -704,10 +707,11 @@ def new_search_building():
 def new_search_lecture_hall():
     return render_template('new_search_lecture_hall.html')
 
-@app.route('/new-search-venue')
-def new_search_venue():
-    return render_template('new_search_venue.html')
+@app.route('/new-search-event')
+def new_search_event():
+    return render_template('new_search_event.html')
 
+#correct
 @app.route('/api/autocomplete/personnel', methods=['GET'])
 def autocomplete_personnel():
     conn = None
@@ -727,7 +731,7 @@ def autocomplete_personnel():
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
-
+#correct
 @app.route('/api/autocomplete/search_personnel')
 def autocomplete_search_personnel():
     conn = None
@@ -760,13 +764,21 @@ def autocomplete_lecture_hall():
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT name FROM LectureHalls")
-        results = cursor.fetchall() 
+        search_term = request.args.get('term', '')
+
+        if search_term:
+            sql = "SELECT name_ FROM LECTURE_HALL WHERE name_ LIKE %s"
+            cursor.execute(sql, ("%" + search_term + "%",))
+        else:    
+            sql = "SELECT name_ FROM LECTURE_HALL"
+            cursor.execute(sql)
         
+        results = cursor.fetchall() 
         names_list = [row[0] for row in results]
         return jsonify(names_list)
         
     except Exception as e:
+        print(f"Error: {e}")
         return jsonify([])
     finally:
         if cursor: cursor.close()
@@ -795,40 +807,33 @@ def autocomplete_search_lecture_hall():
         if cursor: cursor.close()
         if conn: conn.close()
 
-@app.route('/handle-new-search-venue')
-def handle_new_search_venue():
-    return render_template('new_search_lecturehall.html')
 
-#to implement
-@app.route('/handle-new-search-event')
-def handle_new_search_event():
-    return render_template('new_search_tournament_pure.html')
-
-@app.route('/api/tournament-names', methods=['GET'])
-def get_tournament_names():
-    """
-    Fulfills Assignment 9: Fetches all unique tournament names for the static autocomplete list.
-    """
+@app.route('/api/autocomplete/search_event')
+def autocomplete_search_event():
     conn = None
     cursor = None
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor() 
-        sql_query = "SELECT DISTINCT Tournament_name FROM Tournament ORDER BY Tournament_name"
-        cursor.execute(sql_query)
-        tournament_rows = cursor.fetchall()
-        tournament_list = [row[0] for row in tournament_rows] 
-        return jsonify(tournament_list)
 
-    except Error as e:
-        print(f"Database error fetching names: {e}")
-        return jsonify([]), 500
+    try:
+        search_term = request.args.get('term', '')
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        sql = "SELECT Tournament_name FROM Tournament WHERE Tournament_name LIKE %s"
+        cursor.execute(sql, ("%" + search_term + "%",))
+
+        results = cursor.fetchall()
+        names_list = [row[0] for row in results]
+
+        return jsonify(names_list)
     except Exception as e:
-        print(f"General error fetching names: {e}")
-        return jsonify([]), 500
+        return jsonify([])
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
+
+
+
 
 #The Detail Page approach
 
