@@ -753,10 +753,51 @@ def autocomplete_search_personnel():
 
 
 
-#to implement
+@app.route('/api/autocomplete/lecture_hall', methods=['GET'])
+def autocomplete_lecture_hall():
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT name FROM LectureHalls")
+        results = cursor.fetchall() 
+        
+        names_list = [row[0] for row in results]
+        return jsonify(names_list)
+        
+    except Exception as e:
+        return jsonify([])
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
+
+@app.route('/api/autocomplete/search_lecture_hall')
+def autocomplete_search_lecture_hall():
+    conn = None
+    cursor = None
+    try:
+        search_term = request.args.get('term', '')
+        
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        sql = "SELECT name FROM LectureHalls WHERE name LIKE %s"
+        cursor.execute(sql, ("%" + search_term + "%",))
+        
+        results = cursor.fetchall()
+        names_list = [row[0] for row in results]
+        
+        return jsonify(names_list)
+    except Exception as e:
+        return jsonify([])
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
+
 @app.route('/handle-new-search-venue')
 def handle_new_search_venue():
-    print("hello")
+    return render_template('new_search_lecturehall.html')
 
 #to implement
 @app.route('/handle-new-search-event')
