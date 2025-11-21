@@ -7,7 +7,6 @@
 </head>
 <body>
     <header class="container">
-        
         <h1>Results for: "{{ search_term }}"</h1>
     </header>
 
@@ -15,10 +14,8 @@
         
         {% if tournaments %}
             <ul>
-                
                 {% for t in tournaments %}
                     <li>
-                        
                         <a href="{{ url_for('tournament_detail', id=t.Tournament_ID) }}">
                             {{ t.Tournament_name }}
                         </a>
@@ -26,11 +23,11 @@
                 {% endfor %}
             </ul>
         {% else %}
-            <p>Sorry, no tournaments found for that sport.</p>
+            <p>Sorry, no tournaments found for that name.</p>
         {% endif %}
         
         <br>
-        <a href="{{ url_for('search_tournament_form') }}">New Search</a>
+        <a href="{{ url_for('new_search_event') }}">New Search</a>
     </main>
 
     <footer class="container">

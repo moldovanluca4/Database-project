@@ -7,19 +7,26 @@
 </head>
 
 <body>
-<h3>Results for building</h3>
-<ul>
-    {%for item in results_venue%}
-    <li>
-        <a href="/venue/{{ item.id }}">{{ item.name }}</a>
-    </li>
-    {% else %}
-    <li>No results found.</li>
-  
-  {% endfor %}
-</ul>
+    <header class="container">
+        <h1>Results for Lecture Halls</h1>
+    </header>
 
-<a href="{{url_for('show_venue_search')}}">Back to search</a>
-</ul>
+    <main class="container">
+        <ul>
+            {% for item in results_venue %}
+            <li>
+                <a href="{{ url_for('venue_detail', id=item.id) }}">
+                    {{ item.name }} - {{ item.hall_name }}
+                </a>
+                (Capacity: {{ item.capacity }})
+            </li>
+            {% else %}
+            <li>No results found.</li>
+            {% endfor %}
+        </ul>
+
+        <br>
+        <a href="{{ url_for('new_search_lecture_hall') }}">Back to search</a>
+    </main>
 </body>
 </html>

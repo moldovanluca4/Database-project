@@ -7,8 +7,17 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-    <script src="/static/js/autocomplete.js"></script> 
-    <link rel="stylesheet" href="/static/css/style.css"> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <script>
+    $( function() {
+        $( "#tournament-search-input" ).autocomplete({
+            source: "{{ url_for('autocomplete_search_event') }}",
+            minLength: 2,
+            delay: 300
+        });
+    });
+    </script>
 </head>
 <body>
     <header class="container">
@@ -16,16 +25,15 @@
     </header>
 
     <main class="container">
-        
-        <form action="/event-results" method="GET"> 
+        <form action="{{ url_for('event_research') }}" method="GET"> 
             
-            <div>
+            <div class="ui-widget">
                 <label for="tournament-search-input">Tournament Name:</label>
                 <input 
                     type="text" 
                     id="tournament-search-input" 
                     name="tournament_name" 
-                    placeholder="Search for tournament"
+                    placeholder="Start typing (e.g. Football)..."
                 >
             </div>
             <br>
@@ -34,9 +42,8 @@
             </div>
         </form>
         
-        <p style="margin-top: 20px;">
-            <a href="/">Back to Home</a>
-        </p>
+        <br>
+        <a href="{{ url_for('maintenance') }}">Back to Maintenance Page</a>
     </main>
 </body>
 </html>
