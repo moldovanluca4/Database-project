@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Tournament Search</title>
-    
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <title>Search Tournament - Campus Information Center</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
     <script>
     $( function() {
@@ -18,32 +18,90 @@
         });
     });
     </script>
+
+    <style>
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+      .dropdown-content {
+        display: none; 
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+      }
+      .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+      .dropdown-content a:hover {background-color: #f1f1f1}
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+
+      .ui-widget { margin-bottom: 15px; }
+    </style>
 </head>
+
 <body>
-    <header class="container">
-        <h1>Search Tournament</h1>
+    <header class="container header-flex-wrapper">
+        <div id="logo">
+            <img src="{{ url_for('static', filename='campus_logo.png') }}" alt="Campus Information Center">
+            <h1><a href="{{url_for('home')}}">Campus Information Center</a></h1>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="{{url_for('home')}}">Home</a></li>
+                <li class="dropdown"> <a href="javascript:void(0)" class="dropbtn">Menu</a>
+                  <div id="myDropdown" class="dropdown-content">
+                    <a href="{{url_for('show_building_search')}}">Search for a Building</a>
+                    <a href="{{url_for('show_event_search')}}">Search for an Event</a>
+                    <a href="{{url_for('show_venue_search')}}">Search for a Venue</a>
+                    <a href="{{url_for('new_search_building')}}">New search method for Building</a>
+                    <a href="{{ url_for('new_search_event') }}">New Tournament Search</a>
+                    <a href="{{ url_for('new_search_lecture_hall') }}">New search method for Lecture Hall</a>
+                    </div>
+                </li>
+                <li><a href="{{url_for('imprint')}}">Imprint</a></li>
+                <li class="current_page_item"><a href="{{url_for('maintenance')}}">Maintenance Page</a></li>
+            </ul>
+        </nav>
     </header>
 
     <main class="container">
-        <form action="{{ url_for('event_research') }}" method="GET"> 
+        <div class="main-content">
             
-            <div class="ui-widget">
-                <label for="tournament-search-input">Tournament Name:</label>
-                <input 
-                    type="text" 
-                    id="tournament-search-input" 
-                    name="tournament_name" 
-                    placeholder="Start typing (e.g. Football)..."
-                >
-            </div>
-            <br>
-            <div>
+            <h3>Search Tournament</h3>
+
+            <form action="{{ url_for('event_research') }}" method="GET"> 
+                
+                <div class="ui-widget">
+                    <label for="tournament-search-input">Tournament Name:</label>
+                    <input 
+                        type="text" 
+                        id="tournament-search-input" 
+                        name="tournament_name" 
+                        placeholder="Start typing (e.g. Football)..."
+                    >
+                </div>
+                
                 <button type="submit">Search</button>
-            </div>
-        </form>
-        
-        <br>
-        <a href="{{ url_for('maintenance') }}">Back to Maintenance Page</a>
+            </form>
+            
+            <br>
+            <a href="{{ url_for('maintenance') }}">Back to Maintenance Page</a>
+
+        </div>
     </main>
+
+    <footer class="container">
+        <p>&copy; 2025 Campus Information Center. All rights reserved.</p>
+    </footer>
+
 </body>
 </html>
