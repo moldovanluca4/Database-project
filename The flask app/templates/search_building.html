@@ -2,23 +2,87 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Gym details</title>
+    <title>Search Lecture Halls - Campus Information Center</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+      .dropdown-content {
+        display: none; 
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+      }
+      .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+      .dropdown-content a:hover {background-color: #f1f1f1}
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+    </style>
 </head>
 
 <body>
-<h3>Search for Gym Personnel</h3>
+  <header class="container header-flex-wrapper">
+        <div id="logo">
+            <img src="{{ url_for('static', filename='campus_logo.png') }}" alt="Campus Information Center">
+            <h1><a href="{{url_for('home')}}">Campus Information Center</a></h1>
+        </div>
 
-<form action="{{url_for('personnel_search')}}" method="GET">
+        <nav>
+            <ul>
+                <li><a href="{{url_for('home')}}">Home</a></li>
+                <li class="dropdown current_page_item"> <a href="javascript:void(0)" class="dropbtn">Menu</a>
+                  <div id="myDropdown" class="dropdown-content">
+                    
+                    <a href="{{url_for('show_building_search')}}">Search for a Building</a>
+                    <a href="{{url_for('show_event_search')}}">Search for an Event</a>
+                    <a href="{{url_for('show_venue_search')}}">Search for a Venue</a>
+                    <a href="{{url_for('new_search_building')}}">New search method for Building</a>
+                    <a href="{{ url_for('new_search_event') }}">Tournament Search (Autocomplete)</a>
+                    <a href="{{ url_for('new_search_lecture_hall') }}">New search method for Lecture Hall(Venue)</a>
+                   
+                    
+                  </div>
+                </li>
+                <li><a href="{{url_for('imprint')}}">Imprint</a></li>
+                <li><a href="{{url_for('maintenance')}}">Maintenance Page</a></li>
+            </ul>
+        </nav>
+    </header>
 
-  <label>Personnel name:</label>
+<main class="container">
+        <div class="main-content">
+           
+            
+            <h3>Search for Gym Personnel</h3>
+            <form action="{{url_for('personnel_search')}}" method="GET">
+               <label>Personnel name:</label>
   
-  <input type="text" name="personnel_name" placeholder="Enter personnel name...">
+                <input type="text" name="personnel_name" placeholder="Enter personnel name...">
 
-  <button type="submit">Search</button>
+                <button type="submit">Search</button>
 
-  <p>Hints: Manolescu-Neacsu Andrei, Alexandru Dobleaga, Robert Ionescu, Simeon</p>
-</form>
+                <p>Hints: Manolescu-Neacsu Andrei, Alexandru Dobleaga, Robert Ionescu, Simeon</p>
+
+              
+              </form>
+        </div>
+    </main>
+
+    <footer class="container">
+        <p>&copy; 2025 Campus Information Center. All rights reserved.</p>
+    </footer>
 
 </body>
 </html>
+
