@@ -160,3 +160,10 @@ footer{
 #myMenu li a:hover {
   background-color: #eee;
 }
+
+#map{
+    height: 400px;
+    width: 100%;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+}
