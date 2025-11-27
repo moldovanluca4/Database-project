@@ -697,7 +697,7 @@ def lecture_hall_search():
         if cursor: cursor.close()
         if conn: conn.close()
 
-# The new search function for assignment 9
+# The new search functions using autocomplete
 
 @app.route('/new-search-building')
 def new_search_building():
@@ -711,7 +711,7 @@ def new_search_lecture_hall():
 def new_search_event():
     return render_template('new_search_event.html')
 
-#correct
+
 @app.route('/api/autocomplete/personnel', methods=['GET'])
 def autocomplete_personnel():
     conn = None
@@ -731,7 +731,7 @@ def autocomplete_personnel():
     finally:
         if cursor: cursor.close()
         if conn: conn.close()
-#correct
+
 @app.route('/api/autocomplete/search_personnel')
 def autocomplete_search_personnel():
     conn = None
