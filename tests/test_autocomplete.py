@@ -1,4 +1,3 @@
-
 from unittest.mock import Mock
 
 from mysql.connector import Error

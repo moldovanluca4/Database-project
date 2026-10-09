@@ -14,9 +14,9 @@ The repository separates executable applications, database assets, documentation
 
 Flask discovers templates and static resources relative to each entry point's directory. Every application was moved together with its `templates/` and `static/` directories. The main Flask variants remain siblings so their shared resources and local `config` import continue to use the same relative layout.
 
-The PHP implementation retains its page filenames, shared includes, stylesheet, and image directory. Log analysis scripts retain their CSV files in the same working directory. Python, PHP, HTML, CSS, JavaScript embedded in HTML, SQL, datasets, and submitted assets were relocated without editing their contents.
+The PHP implementation retains its page filenames, shared includes, stylesheet, and image directory. Log analysis scripts retain sanitized sample CSV files in the same working directory; new exports go into an ignored output directory.
 
-This is a repository organization change. It does not introduce an application factory, service layer, new database migrations, dependency upgrades, or changes to routes and queries. Such changes would require a separate code refactor.
+The original reorganization did not introduce an application factory, service layer, or new database migrations. Subsequent security fixes require private signing keys, disable debugging, suppress client-visible exception details, and sanitize log data; see [the security guide](security.md).
 
 ## Relocation guide
 
@@ -39,7 +39,7 @@ This is a repository organization change. It does not introduce an application f
 | `Assignments/Assignment 5/` | [archive/assignment-05/php/](../archive/assignment-05/php/) |
 | `Assignment 9 - Autocomplete/` | [archive/prototypes/autocomplete/](../archive/prototypes/autocomplete/) |
 | `public_html/` | [archive/prototypes/public_html/](../archive/prototypes/public_html/) |
-| `Project landing page URL.odt` | [docs/deployment/landing-page.odt](deployment/landing-page.odt) |
+| `Project landing page URL.odt` | Replaced by [docs/deployment/README.md](deployment/README.md) to remove personal deployment identifiers. |
 
 ### File naming
 
@@ -53,4 +53,4 @@ Tracked `.DS_Store` files, Python bytecode caches, and local IntelliJ project me
 
 ## Running after relocation
 
-Update local launch commands or external deployment configuration that referenced an old repository path to use the paths above. Application entry point filenames, internal resource layout, routes, and the scripts' historical server paths are unchanged. No external server configuration was edited as part of this reorganization.
+Update local launch commands or external deployment configuration that referenced an old repository path to use the paths above. Application entry point filenames, internal resource layout, and routes are preserved. The log exporter now takes private server filters through explicit command-line arguments. No external server configuration was edited.

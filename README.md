@@ -82,23 +82,28 @@ The TOML configuration installs Python libraries. Supply a MySQL/MariaDB databas
 
 The main application lives in [apps/campus_information_center](apps/campus_information_center/README.md). `app_v2.py` is the newest numbered entry point in the repository; `app_v1.py` and the SQLAlchemy variant remain available in the same directory because they share templates and static assets.
 
-After installing dependencies, provide an accessible MySQL-compatible database and a local `apps/campus_information_center/config.py` defining `DB_HOST`, `DB_USER`, `DB_PASS`, and `DB_NAME`. This file is excluded from version control. For example:
-
-```python
-DB_HOST = "localhost"
-DB_USER = "campus_user"
-DB_PASS = "replace-with-your-database-password"
-DB_NAME = "campus_information_center"
-```
-
-With those prerequisites available, run from the repository root:
+After installing dependencies, provide an accessible MySQL-compatible database. Copy the environment template and database configuration loader:
 
 ```sh
+cp .env.example .env
+cp apps/campus_information_center/config.example.py apps/campus_information_center/config.py
+```
+
+Fill `.env` privately with `DB_HOST`, `DB_USER`, `DB_PASS`, `DB_NAME`, and a new random `FLASK_SECRET_KEY`. Generate the signing key locally with `python -c "import secrets; print(secrets.token_hex(32))"` and store the resulting value only in private configuration. Do not reuse previously committed credentials or signing keys. Both `.env` and `config.py` are excluded from version control.
+
+Load the environment and run from the repository root:
+
+```sh
+set -a
+. ./.env
+set +a
 cd apps/campus_information_center
 python app_v2.py
 ```
 
-The existing entry point starts Flask with debug mode enabled. The repository does not include a production server configuration, a dependency lockfile, or a complete automated database bootstrap.
+These environment loading commands are for POSIX shells. On PowerShell, set the same values through `$env:NAME` or your deployment platform's private environment settings.
+
+The application requires a private signing key of at least 32 characters and starts with debug mode disabled. Flask's development server is intended for local development; configure a production WSGI server and HTTPS separately. The repository does not include a production server configuration, a dependency lockfile, or a complete automated database bootstrap.
 
 ## Code checks and tests
 
@@ -111,11 +116,13 @@ python -m ruff format --check tests
 python -m pytest
 ```
 
+If the formatting check fails, run `python -m ruff format tests`, then rerun the checks and commit the formatted files before pushing.
+
 For all runtime dependencies plus development tools, install `".[all,dev]"`.
 
-[Ruff](https://docs.astral.sh/ruff/linter/) checks Python code for lint errors; [pytest](https://docs.pytest.org/en/stable/) runs the behavior tests. Both are configured in `pyproject.toml`. Ruff checks the application, tools, and tests while excluding the historical archive. Existing one-line conditionals, unused imports, and unused variables have exceptions limited to the affected files and rules so the original application source remains unchanged. Test files use the full configured lint rules and formatting check.
+[Ruff](https://docs.astral.sh/ruff/linter/) checks Python code for lint errors; [pytest](https://docs.pytest.org/en/stable/) runs the behavior tests. Both are configured in `pyproject.toml`. Ruff checks the application, tools, and tests while excluding the historical archive. Existing style issues have exceptions limited to the affected files and rules. Test files use the full configured lint rules and formatting check.
 
-The tests cover public page rendering, static assets, route and method errors, autocomplete JSON responses and parameter binding, and commit, rollback, and resource cleanup for major submissions. Tests inject dummy configuration, mock database access, and fail if a real connection is attempted. They run without credentials or a database server; they do not verify SQL execution against a real schema or exercise the archived applications and log analysis scripts.
+The tests cover public pages, static assets, autocomplete, parameter binding, commit and rollback behavior, signing key requirements, disabled debugging, safe feedback, and anonymized log exports. Tests inject dummy configuration, mock database access, and fail if a real connection is attempted. They run without credentials or a database server. Static security checks cover every Flask entry point and the archived PHP connection file; database integration and archived PHP execution require separate environments.
 
 The [GitHub Actions workflow](.github/workflows/checks.yml) runs these checks on pushes, pull requests, and manual dispatches using Python 3.11 and 3.14. Its installation needs only the main application and development dependencies.
 
@@ -126,6 +133,7 @@ The [GitHub Actions workflow](.github/workflows/checks.yml) runs these checks on
 - [Schema description](docs/schema/schema-description.txt) and [ER diagram](docs/schema/schema.png).
 - [Log analysis guide](tools/log_analysis/README.md): working directory, inputs, and dependencies.
 - [Archive guide](archive/README.md): previous implementations and prototypes.
+- [Security and credential recovery](docs/security.md): private configuration, data sanitization, and the remaining server and Git history steps.
 
 ## Contributors
 

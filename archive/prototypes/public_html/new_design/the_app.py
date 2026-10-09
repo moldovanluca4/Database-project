@@ -1,9 +1,20 @@
+from markupsafe import escape
+import sys
 import os
 from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
+app.secret_key = os.environ.get("FLASK_SECRET_KEY")
+if not isinstance(app.secret_key, str) or len(app.secret_key) < 32:
+    raise RuntimeError("Provide a private FLASK_SECRET_KEY of at least 32 random characters")
+app.config.update(DEBUG=False, SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE="Lax")
+
 def show_feedback(message, success=True):
+    if not success:
+        app.logger.error("Request failed (%s)", type(sys.exception()).__name__)
+        message = "An unexpected error occurred. Please try again later."
+    message = escape(message)
     return f"""
     <!DOCTYPE html>
     <html>
@@ -178,4 +189,4 @@ def handle_add_service_schedule():
         return show_feedback(f"Error: {e}", success=False)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)

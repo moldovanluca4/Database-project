@@ -1,36 +1,36 @@
-IP Address,Timeline,Page Accessed,Browser
-10.20.30.40,31/Oct/2025:10:00:00 +0100,/~lmoldovan/,Mozilla/5.0 (Windows NT 10.0; Win64; x64) 
-10.20.30.40,31/Oct/2025:10:00:01 +0100,/~lmoldovan/maintenance,Mozilla/5.0 (Windows NT 10.0; Win64; x64) 
-10.20.30.40,31/Oct/2025:10:00:02 +0100,/~lmoldovan/css/style.css,Mozilla/5.0 (Windows NT 10.0; Win64; x64) 
-192.168.1.5,31/Oct/2025:10:02:30 +0100,/~lmoldovan/add_major,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) 
-192.168.1.5,31/Oct/2025:10:02:35 +0100,/~lmoldovan/handle_add_major,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) 
-10.20.30.40,31/Oct/2025:10:03:00 +0100,/~lmoldovan/search-event,Mozilla/5.0 (Windows NT 10.0; Win64; x64) 
-10.20.30.40,31/Oct/2025:10:03:02 +0100,/~lmoldovan/event-results?sport_name=Tennis,Mozilla/5.0 (Windows NT 10.0; Win64; x64) 
-192.168.1.5,31/Oct/2025:10:05:10 +0100,/~lmoldovan/add_club,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) 
-10.20.30.40,31/Oct/2025:10:05:11 +0100,/~lmoldovan/search-building,Mozilla/5.0 (Windows NT 10.0; Win64; x64) 
-10.20.30.40,31/Oct/2025:10:05:15 +0100,/~lmoldovan/building-results?personnel_name=Smith,Mozilla/5.0 (Windows NT 10.0; Win64; x64) 
-198.51.100.2,01/Nov/2025:12:00:01 +0100,/~lmoldovan/imprint,Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1
-198.51.100.2,01/Nov/2025:12:00:02 +0100,/~lmoldovan/css/style.css,Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1
-192.168.1.10,02/Nov/2025:11:10:05 +0100,/~lmoldovan/,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36
-192.168.1.10,02/Nov/2025:11:10:06 +0100,/~lmoldovan/css/style.css,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36
-192.168.1.10,02/Nov/2025:11:10:10 +0100,/~lmoldovan/add_book,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36
-192.168.1.10,02/Nov/2025:11:10:15 +0100,/~lmoldovan/handle_add_book,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36
-10.50.10.5,03/Nov/2025:16:45:00 +0100,/~lmoldovan/search-building,Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/119.0
-10.50.10.5,03/Nov/2025:16:45:04 +0100,/~lmoldovan/building-results?personnel_name=Anna,Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/119.0
-10.50.10.5,03/Nov/2025:16:45:05 +0100,/~lmoldovan/css/style.css,Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/119.0
-192.168.1.10,04/Nov/2025:18:01:30 +0100,/~lmoldovan/add_tournament,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36
-192.168.1.10,04/Nov/2025:18:01:40 +0100,/~lmoldovan/handle_add_tournament,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36
-77.12.34.56,05/Nov/2025:13:00:15 +0100,/~lmoldovan/search-venue,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15
-77.12.34.56,05/Nov/2025:13:00:20 +0100,/~lmoldovan/lecture-hall-results?min_capacity=50,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15
-203.0.113.1,06/Nov/2025:09:30:00 +0100,/~lmoldovan/,Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0
-203.0.113.1,06/Nov/2025:09:30:05 +0100,/~lmoldovan/add_gym_schedule,Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0
-203.0.113.1,06/Nov/2025:09:30:15 +0100,/~lmoldovan/handle_add_gym_schedule,Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0
-198.51.100.2,07/Nov/2025:17:10:10 +0100,/~lmoldovan/add_service_schedule,Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1
-198.51.100.2,07/Nov/2025:17:10:20 +0100,/~lmoldovan/handle_add_service_schedule,Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1
-192.168.1.10,08/Nov/2025:10:05:00 +0100,/~lmoldovan/search-event,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36
-192.168.1.10,08/Nov/2025:10:05:05 +0100,/~lmoldovan/event-results?sport_name=,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36
-10.50.10.5,09/Nov/2025:20:15:30 +0100,/~lmoldovan/link_hall_to_major,Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/119.0
-10.50.10.5,09/Nov/2025:20:15:40 +0100,/~lmoldovan/handle_link_hall_major,Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/119.0
-77.12.34.56,10/Nov/2025:09:00:01 +0100,/~lmoldovan/maintenance,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15
-77.12.34.56,10/Nov/2025:09:00:05 +0100,/~lmoldovan/imprint,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15
-77.12.34.56,10/Nov/2025:09:00:06 +0100,/~lmoldovan/css/style.css,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15
+"IP Address","Timeline","Page Accessed","Browser"
+"client-108f6080a5d2eee396fcd9d5","31/Oct/2025:10:00:00 +0100","route-41dbe83fa6f24c572daa756b","Other"
+"client-108f6080a5d2eee396fcd9d5","31/Oct/2025:10:00:01 +0100","route-6b252d664b56260e8be042ce","Other"
+"client-108f6080a5d2eee396fcd9d5","31/Oct/2025:10:00:02 +0100","route-9a7f9abb9e7b57f6490ba44e","Other"
+"client-5bffad1b1ac68c3a1437ecdc","31/Oct/2025:10:02:30 +0100","route-1ab8582a352ac3525fdfb12b","Other"
+"client-5bffad1b1ac68c3a1437ecdc","31/Oct/2025:10:02:35 +0100","route-29ff5dceed24d2c84be7cb3c","Other"
+"client-108f6080a5d2eee396fcd9d5","31/Oct/2025:10:03:00 +0100","route-9b2340d665b80248b0713b69","Other"
+"client-108f6080a5d2eee396fcd9d5","31/Oct/2025:10:03:02 +0100","route-d5e5ef0a34d009fd194570b6","Other"
+"client-5bffad1b1ac68c3a1437ecdc","31/Oct/2025:10:05:10 +0100","route-423d65873f97d6fab6d8fda0","Other"
+"client-108f6080a5d2eee396fcd9d5","31/Oct/2025:10:05:11 +0100","route-0909c8b1c3700ca48b198920","Other"
+"client-108f6080a5d2eee396fcd9d5","31/Oct/2025:10:05:15 +0100","route-6aba5ec8e6935cfaa5d83ca6","Other"
+"client-a1a430a9e0f2010468da8e2c","01/Nov/2025:12:00:01 +0100","route-f31d13098acfb9b525828213","Other"
+"client-a1a430a9e0f2010468da8e2c","01/Nov/2025:12:00:02 +0100","route-9a7f9abb9e7b57f6490ba44e","Other"
+"client-ab2aa6cd901c4855a64eee8e","02/Nov/2025:11:10:05 +0100","route-41dbe83fa6f24c572daa756b","Other"
+"client-ab2aa6cd901c4855a64eee8e","02/Nov/2025:11:10:06 +0100","route-9a7f9abb9e7b57f6490ba44e","Other"
+"client-ab2aa6cd901c4855a64eee8e","02/Nov/2025:11:10:10 +0100","route-464994d1723690a841a7de7c","Other"
+"client-ab2aa6cd901c4855a64eee8e","02/Nov/2025:11:10:15 +0100","route-87da859621d9190d59077165","Other"
+"client-6d860ebd9207e6d5d6ee4792","03/Nov/2025:16:45:00 +0100","route-0909c8b1c3700ca48b198920","Firefox"
+"client-6d860ebd9207e6d5d6ee4792","03/Nov/2025:16:45:04 +0100","route-6aba5ec8e6935cfaa5d83ca6","Firefox"
+"client-6d860ebd9207e6d5d6ee4792","03/Nov/2025:16:45:05 +0100","route-9a7f9abb9e7b57f6490ba44e","Firefox"
+"client-ab2aa6cd901c4855a64eee8e","04/Nov/2025:18:01:30 +0100","route-bbe64137e0ec3d7f1ba4e68c","Other"
+"client-ab2aa6cd901c4855a64eee8e","04/Nov/2025:18:01:40 +0100","route-fe446ae3a8be2accc7b08862","Other"
+"client-1e680928344af48ed5d2ced6","05/Nov/2025:13:00:15 +0100","route-e301d580a0c5630acce801bc","Other"
+"client-1e680928344af48ed5d2ced6","05/Nov/2025:13:00:20 +0100","route-562c62ec989f19bf2abce4a9","Other"
+"client-6acd26b67b91c394a8f4f9b7","06/Nov/2025:09:30:00 +0100","route-41dbe83fa6f24c572daa756b","Firefox"
+"client-6acd26b67b91c394a8f4f9b7","06/Nov/2025:09:30:05 +0100","route-3268d9fdb56af36e1e94eb34","Firefox"
+"client-6acd26b67b91c394a8f4f9b7","06/Nov/2025:09:30:15 +0100","route-e5d6b8160c4c6e707b2d3cc6","Firefox"
+"client-a1a430a9e0f2010468da8e2c","07/Nov/2025:17:10:10 +0100","route-32b393ac4985f49eb952dacc","Other"
+"client-a1a430a9e0f2010468da8e2c","07/Nov/2025:17:10:20 +0100","route-4d923c78ca89aaaee12d9894","Other"
+"client-ab2aa6cd901c4855a64eee8e","08/Nov/2025:10:05:00 +0100","route-9b2340d665b80248b0713b69","Other"
+"client-ab2aa6cd901c4855a64eee8e","08/Nov/2025:10:05:05 +0100","route-d5e5ef0a34d009fd194570b6","Other"
+"client-6d860ebd9207e6d5d6ee4792","09/Nov/2025:20:15:30 +0100","route-44107433608af591b218e6d2","Firefox"
+"client-6d860ebd9207e6d5d6ee4792","09/Nov/2025:20:15:40 +0100","route-71334cdd787faef1b94e3cd5","Firefox"
+"client-1e680928344af48ed5d2ced6","10/Nov/2025:09:00:01 +0100","route-6b252d664b56260e8be042ce","Other"
+"client-1e680928344af48ed5d2ced6","10/Nov/2025:09:00:05 +0100","route-f31d13098acfb9b525828213","Other"
+"client-1e680928344af48ed5d2ced6","10/Nov/2025:09:00:06 +0100","route-9a7f9abb9e7b57f6490ba44e","Other"

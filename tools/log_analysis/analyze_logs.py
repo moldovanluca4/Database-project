@@ -1,42 +1,123 @@
+"""Export log statistics without exposing client identities or deployment details."""
+
+import argparse
 import csv
+import hashlib
+import hmac
+import os
+from pathlib import Path
 import re
-
-path_to_log_files = "/var/log/apache2/access_log"
-path_to_error_log_files = "/var/log/apache2/error_log"
-
-
-csv_file_access_logs = open('statistics_access.csv', 'wb')
-writer = csv.writer(csv_file_access_logs, quoting=csv.QUOTE_ALL)
-writer.writerow(['IP Address', 'Timeline','Page Accessed','Browser'])
-
-csv_file_error_logs = open('statistics_error.csv', 'wb')
-writer_error = csv.writer(csv_file_error_logs, quoting=csv.QUOTE_ALL)
-writer_error.writerow(['IP Address', 'Timeline','Error Message'])
-
-with open(path_to_log_files, 'r') as log_file:
-    for line in log_file:
-        if 'http://10.60.36.1/~lmoldovan/' in line:
-            match = re.search(r'(\d+\.\d+\.\d+\.\d+) - - \[(.*?)\] "(\S+ (\S+) \S+)" \d+ \S+ ".*?" "(.*?)" "(.*?)"', line)
-            if match:
-                ip_address = match.group(1)
-                timeline = match.group(2)
-                page_accessed = match.group(4)
-                browser = match.group(6)
-                writer.writerow([ip_address, timeline, page_accessed,browser])
+import secrets
+from urllib.parse import urlsplit
 
 
-with open(path_to_error_log_files, 'r') as error_log_file:
-    for line in error_log_file:
-        if '/home/lmoldovan/public_html/The-flask-app' in line:
-            match_error = re.search(r'\[(.*?)\] \[.*?\] \[client (.*?)\] (.*)', line)
-            if match_error:
-                timeline_error = match_error.group(1)
-                ip_address_error = match_error.group(2)
-                error_message = match_error.group(3)
-                writer_error.writerow([ip_address_error, timeline_error, error_message])
-            else:
-                match_error_alt = re.search(r'\[(.*?)\] \[.*?\] (.*)', line)
-                if match_error_alt:
-                    timeline_error = match_error_alt.group(1)
-                    error_message = match_error_alt.group(2)
-                    writer_error.writerow(['N/A', timeline_error, error_message])
+ACCESS_PATTERN = re.compile(
+    r"(?P<client>\S+) \S+ \S+ \[(?P<time>[^]]+)\] "
+    r'"\S+ (?P<route>\S+) [^"]+" \d+ \S+ "[^"]*" "(?P<browser>[^"]*)"'
+)
+ERROR_PATTERN = re.compile(
+    r"\[(?P<time>[^]]+)\] \[[^]]+\](?: \[client (?P<client>[^]]+)\])? (?P<message>.*)"
+)
+
+
+def pseudonym(value, key, prefix):
+    digest = hmac.new(key, value.encode("utf-8"), hashlib.sha256).hexdigest()[:24]
+    return f"{prefix}-{digest}"
+
+
+def client_identifier(value, key):
+    if value.startswith("[") and "]" in value:
+        value = value[1 : value.index("]")]
+    elif value.count(":") == 1:
+        value = value.split(":", 1)[0]
+    return pseudonym(value, key, "client")
+
+
+def browser_family(user_agent):
+    for marker, name in (
+        ("Edg", "Edge"),
+        ("Firefox", "Firefox"),
+        ("Chrome", "Chrome"),
+        ("Safari", "Safari"),
+    ):
+        if marker.lower() in user_agent.lower():
+            return name
+    return "Other"
+
+
+def error_category(message):
+    message = message.lower()
+    if "not found" in message or "does not exist" in message:
+        return "Resource not found"
+    if "denied" in message or "forbidden" in message:
+        return "Access denied"
+    return "Server event"
+
+
+def export_logs(access_log, error_log, site_url, app_path, output_dir, key):
+    if len(key) < 32:
+        raise ValueError("The anonymization key must contain at least 32 bytes")
+    if not site_url or not app_path:
+        raise ValueError("Provide explicit site URL and application path filters")
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    with Path(access_log).open(encoding="utf-8", errors="replace") as source:
+        with (output_dir / "statistics_access.csv").open(
+            "w", encoding="utf-8", newline=""
+        ) as destination:
+            writer = csv.writer(destination, quoting=csv.QUOTE_ALL, lineterminator="\n")
+            writer.writerow(["IP Address", "Timeline", "Page Accessed", "Browser"])
+            for line in source:
+                if site_url not in line:
+                    continue
+                match = ACCESS_PATTERN.search(line)
+                if match:
+                    # Strip query strings before pseudonymizing the resource identifier.
+                    route = urlsplit(match["route"]).path
+                    writer.writerow(
+                        [
+                            client_identifier(match["client"], key),
+                            match["time"],
+                            pseudonym(route, key, "route"),
+                            browser_family(match["browser"]),
+                        ]
+                    )
+
+    with Path(error_log).open(encoding="utf-8", errors="replace") as source:
+        with (output_dir / "statistics_error.csv").open(
+            "w", encoding="utf-8", newline=""
+        ) as destination:
+            writer = csv.writer(destination, quoting=csv.QUOTE_ALL, lineterminator="\n")
+            writer.writerow(["IP Address", "Timeline", "Error Message"])
+            for line in source:
+                if app_path not in line:
+                    continue
+                match = ERROR_PATTERN.search(line)
+                if match:
+                    writer.writerow(
+                        [
+                            client_identifier(match["client"], key)
+                            if match["client"]
+                            else "Unknown client",
+                            match["time"],
+                            error_category(match["message"]),
+                        ]
+                    )
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--access-log", type=Path, required=True)
+    parser.add_argument("--error-log", type=Path, required=True)
+    parser.add_argument("--site-url", required=True)
+    parser.add_argument("--app-path", required=True)
+    parser.add_argument("--output-dir", type=Path, default=Path("output"))
+    args = parser.parse_args()
+    configured_key = os.environ.get("LOG_ANONYMIZATION_KEY")
+    key = configured_key.encode("utf-8") if configured_key else secrets.token_bytes(32)
+    export_logs(args.access_log, args.error_log, args.site_url, args.app_path, args.output_dir, key)
+
+
+if __name__ == "__main__":
+    main()

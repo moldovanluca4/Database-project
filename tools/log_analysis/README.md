@@ -1,19 +1,29 @@
 # Web log analysis
 
-The original web log evaluation scripts and their CSV files remain together because the scripts use filenames relative to the current working directory.
+Install analysis dependencies from the repository root with `python -m pip install ".[analytics]"` in an activated virtual environment.
 
-Install the analysis dependencies from the repository root with `python -m pip install ".[analytics]"` in an activated virtual environment. The `all` installation option includes these dependencies as well.
+The checked-in CSV datasets are sanitized: clients and routes are represented by keyed pseudonyms, browser strings are reduced to families, and error messages are reduced to categories. Column names retain compatibility with the plotting script.
 
-Run from this directory:
+To display the included data:
 
 ```sh
 cd tools/log_analysis
-python3 analyze_logs.py
-python3 statistics.py
+python statistics.py
 ```
 
-`analyze_logs.py` uses Python's standard library. It reads `/var/log/apache2/access_log` and `/var/log/apache2/error_log`, filters the original campus deployment traffic, and writes `statistics_access.csv` and `statistics_error.csv` in the current directory. Running it replaces those CSV files with results from the available logs.
+To analyze private logs, provide your own paths and deployment filters:
 
-`statistics.py` reads the CSV files and displays plots using pandas, Matplotlib, and NumPy. It can also be run directly against the included datasets without rerunning log extraction.
+```sh
+python analyze_logs.py \
+  --access-log /private/access.log \
+  --error-log /private/error.log \
+  --site-url https://campus.example/ \
+  --app-path /srv/campus \
+  --output-dir output
+```
 
-The submitted figures and PDF are retained in [docs/evidence/log-analysis](../../docs/evidence/log-analysis/). The scripts keep their original Apache paths, deployment filter, and behavior.
+The exporter never copies raw client IPs, route names, full browser strings, or exception details to its CSV output. It uses HMAC-SHA256 pseudonyms with a random key per export. To compare client identities across multiple exports, provide a private `LOG_ANONYMIZATION_KEY` of at least 32 characters through the environment. Keep this key private and separate from exported data. Pseudonymous records still require appropriate access controls.
+
+Exports go into the ignored `output/` directory by default. Plot an export with `cd output` followed by `python ../statistics.py`. The extraction script requires only Python's standard library; plotting uses pandas, Matplotlib, and NumPy.
+
+Sanitized figures are in [docs/evidence/log-analysis](../../docs/evidence/log-analysis/). The historical PDF containing raw client and deployment identifiers was removed.

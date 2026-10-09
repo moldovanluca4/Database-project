@@ -12,6 +12,6 @@ All three entry points share `templates/` and `static/`. Keep those directories 
 
 Install dependencies from the repository root using `python -m pip install .` for v2, `python -m pip install ".[legacy]"` for v1, or `python -m pip install ".[sqlalchemy]"` for the SQLAlchemy variant. `python -m pip install ".[all]"` includes every variant and the log analysis tools. See the root [installation guide](../../README.md#installation) for virtual environment setup and operating system prerequisites.
 
-Each entry point imports a local `config` module. Provide a private `config.py` here with `DB_HOST`, `DB_USER`, `DB_PASS`, and `DB_NAME`. Configuration and credentials are not part of the tracked application.
+Each entry point imports a local `config` module. Copy `config.example.py` to private `config.py` and supply `DB_HOST`, `DB_USER`, `DB_PASS`, and `DB_NAME` through environment variables. Set `FLASK_SECRET_KEY` to a new random secret of at least 32 characters before startup. Existing private configuration can also provide `SECRET_KEY`, but it must meet the same minimum length requirement.
 
-Application source, routes, SQL statements, templates, and static assets retain their original contents. Existing template naming inconsistencies and database prerequisites are outside this structural reorganization.
+Every entry point disables debug mode by default, escapes feedback text, and suppresses exception details in client responses. The SQLAlchemy variant builds its database URL with SQLAlchemy's URL API and hides SQL parameter values in its error representation. See the root [setup instructions](../../README.md#working-with-the-application) and [security guide](../../docs/security.md).

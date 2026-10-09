@@ -1,4 +1,3 @@
-
 from mysql.connector import Error
 import pytest
 
@@ -31,7 +30,8 @@ def test_major_submission_rolls_back_and_closes_resources(client, database, fail
     response = client.post("/handle_add_major", data={"major_name": "Engineering"})
 
     assert response.status_code == 200
-    assert b"Database Error:" in response.data
+    assert b"An unexpected error occurred." in response.data
+    assert b"Database unavailable" not in response.data
     connection.rollback.assert_called_once_with()
     if failure_point == "execute":
         connection.commit.assert_not_called()

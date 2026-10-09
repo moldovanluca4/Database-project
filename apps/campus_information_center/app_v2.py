@@ -1,3 +1,5 @@
+from markupsafe import escape
+import sys
 import os
 import mysql.connector
 from mysql.connector import Error
@@ -6,7 +8,11 @@ import json
 import config
 
 app = Flask(__name__)
-app.secret_key = 'super-secret-key'
+
+app.secret_key = os.environ.get("FLASK_SECRET_KEY") or getattr(config, "SECRET_KEY", None)
+if not isinstance(app.secret_key, str) or len(app.secret_key) < 32:
+    raise RuntimeError("Provide a private FLASK_SECRET_KEY of at least 32 random characters")
+app.config.update(DEBUG=False, SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE="Lax")
 
 
 #helper function for establishing the connection
@@ -22,12 +28,16 @@ def get_db_connection():
 
         return conn
     except Error as e:
-        print("Error connecting to MariaDB Platform: {}".format(e))
+        app.logger.error("Database connection failed")
         raise e
 
 
 #custom function that shows a simple html page in case of a success or error
 def show_feedback(message, success=True):
+    if not success:
+        app.logger.error("Request failed (%s)", type(sys.exception()).__name__)
+        message = "An unexpected error occurred. Please try again later."
+    message = escape(message)
     html_template = """
     <!DOCTYPE html>
     <html>
@@ -778,7 +788,7 @@ def autocomplete_lecture_hall():
         return jsonify(names_list)
         
     except Exception as e:
-        print(f"Error: {e}")
+        app.logger.error("Autocomplete request failed")
         return jsonify([])
     finally:
         if cursor: cursor.close()
@@ -890,4 +900,4 @@ def show_personnel(personnel_name):
         if conn: conn.close()
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)

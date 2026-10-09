@@ -1,6 +1,9 @@
+from markupsafe import escape
+import sys
 import os
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import URL
 from sqlalchemy.sql import text
 from sqlalchemy.exc import SQLAlchemyError
 import config
@@ -9,15 +12,25 @@ db = SQLAlchemy()
 
 app = Flask(__name__)
 
+app.secret_key = os.environ.get("FLASK_SECRET_KEY") or getattr(config, "SECRET_KEY", None)
+if not isinstance(app.secret_key, str) or len(app.secret_key) < 32:
+    raise RuntimeError("Provide a private FLASK_SECRET_KEY of at least 32 random characters")
+app.config.update(DEBUG=False, SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE="Lax")
+
 
 try:
-    app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{config.DB_USER}:{config.DB_PASS}@{config.DB_HOST}/{config.DB_NAME}"
+    app.config['SQLALCHEMY_DATABASE_URI'] = URL.create("mysql+pymysql", username=config.DB_USER, password=config.DB_PASS, host=config.DB_HOST, database=config.DB_NAME)
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"hide_parameters": True}
     db.init_app(app)
-except Exception as e:
-    print(f"could not configure database {e}")
+except Exception:
+    raise RuntimeError("Database configuration failed; check private settings") from None
 
 def show_feedback(message, success=True):
+    if not success:
+        app.logger.error("Request failed (%s)", type(sys.exception()).__name__)
+        message = "An unexpected error occurred. Please try again later."
+    message = escape(message)
     return f"""
     <!DOCTYPE html>
     <html>
@@ -437,4 +450,4 @@ def show_personnel(personnel_name):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)

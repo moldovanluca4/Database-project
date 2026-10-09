@@ -1,7 +1,7 @@
 <?php include 'header.php'; ?>
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
 
 include 'db_connect.php';
@@ -16,7 +16,7 @@ if (isset($_POST['submit'])) {
         header("Location: AssignEventVenue_Feedback.php?status=success&message=" . urlencode("Event assigned to Venue successfully!"));
         exit;
     } else {
-        header("Location: AssignEventVenue_Feedback.php?status=error&message=" . urlencode($stmt->error));
+        header("Location: AssignEventVenue_Feedback.php?status=error&message=" . urlencode("An unexpected error occurred. Please try again later."));
         exit;
     }
 }

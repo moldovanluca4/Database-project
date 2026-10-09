@@ -1,4 +1,3 @@
-
 import importlib.util
 import sys
 from pathlib import Path
@@ -11,6 +10,7 @@ import pytest
 
 @pytest.fixture
 def app_module(monkeypatch):
+    monkeypatch.setenv("FLASK_SECRET_KEY", "test-only-secret-" + "x" * 32)
     config = ModuleType("config")
     config.DB_HOST = "127.0.0.1"
     config.DB_USER = "test_user"
